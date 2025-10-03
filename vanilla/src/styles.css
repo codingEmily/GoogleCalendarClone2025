@@ -1,0 +1,323 @@
+:root {
+  --default-text: #333; /*For today-btn, nav arrows, month header, and primary dates, I think */
+  --weekday-text: #777; /*Week-day-name and all-prev-days-numbers, are the same I think */
+  --out-of-month-day-background: #f5f5f5; /* shaded background, made it up bec they pasted the same code as button-background, and that cannot be right */
+  --button-background: #dadce0; /* may also be each-dates-borders, bec they are potentially buttons, and similar color */
+  --todays-date-txt-backgrnd: hsl(200, 80%, 50%);
+
+  --red-event: hsl(0, 75%, 60%);
+  --blue-event: hsl(200, 80%, 50%);
+  --green-event: hsl(150, 80%, 30%);
+
+  --Save-Add-Button-Border: hsl(150, 80%, 30%);
+  --Save-Add-Button-Background: hsl(150, 80%, 95%);
+  --Save-Add-Button-Text: hsl(150, 80%, 10%);
+  --Save-Add-Button-Hover-Background: hsl(150, 80%, 90%);
+
+  --calendar-height: max(
+    500px,
+    100%
+  ); /* calender DOES fill height and width, but I have to add a little padding*/
+  --calendar-width: clamp(300px, 100%, 1500px);
+  --nav-height: max(30px, 5%);
+  --month-height: calc(var(--calendar-height) - var(--nav-height));
+  --event-module-height: 300px;
+  --event-module-header-height: 30px;
+  --event-module-width: 250px;
+
+  --date-font: Arial, Helvetica, sans-serif;
+  --date-font-size: 10px;
+}
+
+#root,
+html,
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* scrollbar-gutter: stable; */
+
+  height: 100vh;
+  width: 100vw;
+  margin: 0%;
+  box-sizing: border-box;
+}
+
+.calendar {
+  width: var(--calendar-width);
+  height: var(--calendar-height);
+  box-sizing: border-box;
+  padding: 10px; /* SOMETHING WRONG HERE - if the padding is 0, it overflows, at 10, it doesn't overflow or  "look" padded, at 20px, it "looks" like 10px padded -- the problem is PROBABLY more with sizing than padding*/
+}
+
+.calendar-nav {
+  width: var(--calendar-width);
+  height: var(--nav-height);
+  font-size: larger;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.month-container {
+  width: var(--calendar-width);
+  height: var(--month-height);
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+
+  align-items: stretch;
+  justify-items: stretch;
+
+  color: var(--temp-monthly-grid-border);
+  box-sizing: border-box;
+  /* border-collapse: collapse; */
+}
+
+/* should affect all "month-container" children, aka all the dates */
+/*alternatively could use '.each-day' to label */
+.month-container > *,
+.date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* DANGER ZONE lol I'm not familiar w positioning*/
+  width: 100%;
+  height: 100%;
+
+  color: var(--default-text);
+  background-color: white;
+  box-sizing: border-box;
+
+  outline: 1px solid var(--button-background);
+  /* border-collapse: collapse; */
+}
+
+.date-header {
+  font-family: var(--date-font);
+  font-size: var(--date-font-size);
+  margin-top: 4%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* aspect-ratio: 1 / 1; */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.date-num {
+  display: grid;
+  place-items: center;
+
+  font-size: var(--date-font-size);
+  width: calc(var(--date-font-size) * 1.5);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
+
+.add-event-btn {
+  display: none;
+  font-family: var(--date-font);
+  font-weight: 100;
+  font-size: calc(var(--date-font-size) * 1.25);
+
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: calc(var(--date-font-size) * 1.5);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+
+  color: var(--default-text);
+  background-color: var(--out-of-month-day-background);
+  /* background-color: transparent; */
+  border: none;
+  padding: 0; /*idk this is needed, BUT IT IS NEEDED */
+}
+.date:hover .add-event-btn {
+  display: block;
+}
+
+.weekday-label {
+  font-size: calc(var(--date-font-size) * 0.8);
+  color: var(--weekday-text);
+  border-radius: 50%;
+}
+
+.out-of-month-day {
+  background-color: var(--out-of-month-day-background);
+}
+
+.today {
+  color: white;
+  background-color: var(--todays-date-txt-backgrnd);
+}
+
+.prev-day {
+  color: var(--weekday-text);
+}
+
+button {
+  color: var(--default-text);
+  background-color: white;
+
+  padding: 6px 8px;
+  border: 1px solid var(--button-background);
+  border-radius: 3px;
+
+  font-family: var(--date-font);
+  font-weight: 600;
+}
+
+.month-header {
+  color: var(--default-text);
+
+  font-family: var(--date-font);
+  font-weight: 600;
+}
+
+button.nav-arrow-button {
+  border: none;
+}
+
+.event-module {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: var(--event-module-width);
+  height: var(--event-module-height);
+  color: black;
+  background-color: white;
+
+  padding: 0px 12px 12px 12px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsla(0, 0%, 10%, 0.5);
+}
+
+.overlay.show,
+.event-module.show {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-module-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  top: 15px;
+  padding-bottom: 15px;
+}
+
+.event-module-header-name {
+  font-family: var(--date-font);
+  font-size: 25px;
+  font-weight: 100;
+}
+
+.event-module-header-date {
+  font-family: var(--date-font);
+  color: var(--default-text);
+  font-size: 15px;
+}
+.event-module-header-close-btn {
+  font-family: var(--date-font);
+  color: var(--default-text);
+  font-size: 15px;
+  border: none;
+}
+
+.event-submit-btn {
+  position: fixed;
+  width: 90%;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--Save-Add-Button-Text);
+  background-color: var(--Save-Add-Button-Background);
+  border-color: var(--Save-Add-Button-Border);
+}
+
+.event-submit-btn-section {
+  height: 20px;
+}
+
+.event-submit-btn:hover {
+  background-color: var(--Save-Add-Button-Hover-Background);
+}
+
+.form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-times {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  background-color: var(--out-of-month-day-background);
+  border-radius: 5px;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+#red {
+  background-color: hsl(0, 65%, 80%);
+}
+#red:checked {
+  background-color: var(--red-event);
+}
+#blue {
+  background-color: hsl(200, 70%, 80%);
+}
+#blue:checked {
+  background-color: var(--blue-event);
+}
+#green {
+  background-color: hsl(150, 70%, 80%);
+}
+#green:checked {
+  background-color: var(--green-event);
+}
+/*OG COLORS
+--red-event: hsl(0, 75%, 60%);
+--blue-event: hsl(200, 80%, 50%);
+--green-event: hsl(150, 80%, 30%); */
