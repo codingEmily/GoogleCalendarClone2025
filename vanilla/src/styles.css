@@ -20,7 +20,14 @@
   ); /* calender DOES fill height and width, but I have to add a little padding*/
   --calendar-width: clamp(300px, 100%, 1500px);
   --nav-height: max(30px, 5%);
-  --month-height: calc(var(--calendar-height) - var(--nav-height));
+  --month-grid-height: calc(var(--calendar-height) - var(--nav-height));
+
+  --date-num-height: calc(var(--date-font-size) * 1.5);
+  /* --date-weekday-label-height: var(--date-font-size); */
+  --date-weekday-label-height: 0px;
+
+  --date-header-height: calc(var(--date-num-height) + var(--date-weekday-label-height));
+
   --event-module-height: 300px;
   --event-module-header-height: 30px;
   --event-module-width: 250px;
@@ -36,7 +43,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* scrollbar-gutter: stable; */
+  scrollbar-gutter: stable;
 
   height: 100vh;
   width: 100vw;
@@ -61,7 +68,7 @@ body {
 
 .month-container {
   width: var(--calendar-width);
-  height: var(--month-height);
+  height: var(--month-grid-height);
 
   display: grid;
   grid-auto-flow: row;
@@ -73,6 +80,9 @@ body {
 
   color: var(--temp-monthly-grid-border);
   box-sizing: border-box;
+  background-color: blue;
+  color: blue;
+  border: 5px solid blue;
   /* border-collapse: collapse; */
 }
 
@@ -81,8 +91,9 @@ body {
 .month-container > *,
 .date {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   position: relative; /* DANGER ZONE lol I'm not familiar w positioning*/
   width: 100%;
   height: 100%;
@@ -102,6 +113,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: var(--date-header-height);
 
   /* aspect-ratio: 1 / 1; */
   position: absolute;
@@ -116,6 +128,8 @@ body {
 
   font-size: var(--date-font-size);
   width: calc(var(--date-font-size) * 1.5);
+  height: var(--date-num-height);
+
   aspect-ratio: 1 / 1;
   border-radius: 50%;
 }
@@ -143,10 +157,58 @@ body {
   display: block;
 }
 
-.weekday-label {
+.date-weekday-label {
   font-size: calc(var(--date-font-size) * 0.8);
+  height: var(--date-weekday-label-height);
   color: var(--weekday-text);
   border-radius: 50%;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgb(236, 226, 226);
+  position: absolute;
+
+  width: 100%;
+  top: var(--date-header-height);
+  height: calc(100% - var(--date-header-height));
+  /* height: 100%; */
+  /* height:auto; */
+
+  /* flex: 1; */
+  bottom: 0;
+  overflow: hidden;
+}
+
+.calendar-event {
+  /* background-color: green; */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 1.5em;
+  width: calc(100% - 8px);
+  /* line-height: 1em; */
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  /* flex-direction: column; */
+
+  text-overflow: clip;
+  margin: 5px;
+  box-shadow: 0 1px 0px var(--button-background);
+  /* text-wrap-style: auto; */
+}
+.allday-event {
+  background-color: red;
+}
+.timed-event {
+  background-color: transparent;
+  /* outline: none */
 }
 
 .out-of-month-day {
@@ -299,6 +361,7 @@ input[type="radio"] {
   flex-direction: row;
   gap: 10px;
 }
+
 #red {
   background-color: hsl(0, 65%, 80%);
 }

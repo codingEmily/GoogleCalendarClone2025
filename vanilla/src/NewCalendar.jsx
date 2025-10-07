@@ -41,7 +41,7 @@ export function EventsProvider({ children }) {
     const key = format(date, "yyyy-MM-dd")
     setEvents((prev) => {
       const prevEvents = prev[key] || []
-      return { ...prev, [key]: [...prevEvents, eventObj] }
+      return { ...prev, [key]: [...prevEvents, eventObj] } //the one line I don't fully understand
     })
   }
 
@@ -131,18 +131,59 @@ export function NewCalendar() {
 //
 // -------------------- EACH DATE CELL --------------------
 //
+// function EachDate({ date, index }) {
+//   const { visibleMonth, setShowEventModule, setSelectedEventDate } = useContext(DatesContext)
+
+//   const row = Math.floor(index / 7)
+//   const col = index % 7
+//   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+
+//   return (
+//     <div className={`date ${!isSameMonth(date, visibleMonth) && "out-of-month-day"} `}>
+//       <button
+//         onClick={() => {
+//           setShowEventModule(true) // FIXED: always open, not toggle
+//           setSelectedEventDate(date)
+//         }}
+//         className='add-event-btn'>
+//         +
+//       </button>
+
+//       <div className='date-header'>
+//         {row === 0 && <div className='weekday-label'>{weekdayLabels[col]} </div>}
+//         <div
+//           className={`date-num ${isToday(date) && "today"} ${
+//             isPast(date) && !isToday(date) && "prev-day"
+//           }`}>
+//           {date.getDate()}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
 function EachDate({ date, index }) {
   const { visibleMonth, setShowEventModule, setSelectedEventDate } = useContext(DatesContext)
+  const { getEventsForDate } = useEvents() // NEW
 
   const row = Math.floor(index / 7)
   const col = index % 7
   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
+  // --- Get and sort events for this date ---
+  const events = getEventsForDate(date)
+  const sortedEvents = [...events].sort((a, b) => {
+    if (a.eventAllday && !b.eventAllday) return -1
+    if (!a.eventAllday && b.eventAllday) return 1
+    if (a.eventAllday && b.eventAllday) return 0
+    return a.eventTimes.start.localeCompare(b.eventTimes.start)
+  })
+
   return (
     <div className={`date ${!isSameMonth(date, visibleMonth) && "out-of-month-day"} `}>
       <button
         onClick={() => {
-          setShowEventModule(true) // FIXED: always open, not toggle
+          setShowEventModule(true)
           setSelectedEventDate(date)
         }}
         className='add-event-btn'>
@@ -157,6 +198,29 @@ function EachDate({ date, index }) {
           }`}>
           {date.getDate()}
         </div>
+      </div>
+
+      {/* --- Events display --- */}
+      <div className='events-list'>
+        {sortedEvents.map((event, i) => (
+          <button
+            key={i}
+            className={`calendar-event ${event.eventAllday ? "allday-event" : "timed-event"}`}>
+            {event.eventAllday ? (
+              // --- All-day event: only the name
+              <span className='event-name'>{event.eventName}</span>
+            ) : (
+              // --- Timed event: colored dot + time + name
+              <>
+                <span className='event-dot' style={{ color: event.eventColor }}>
+                  ●
+                </span>
+                <span className='event-time'>{event.eventTimes.start}</span>{" "}
+                <span className='event-name'>{event.eventName}</span>
+              </>
+            )}
+          </button>
+        ))}
       </div>
     </div>
   )
