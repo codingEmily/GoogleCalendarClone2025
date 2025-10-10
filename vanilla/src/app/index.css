@@ -8,11 +8,17 @@
   --red-event: hsl(0, 75%, 60%);
   --blue-event: hsl(200, 80%, 50%);
   --green-event: hsl(150, 80%, 30%);
+  /* --event-btn-color: var(var(--red-event)) */
 
   --Save-Add-Button-Border: hsl(150, 80%, 30%);
   --Save-Add-Button-Background: hsl(150, 80%, 95%);
   --Save-Add-Button-Text: hsl(150, 80%, 10%);
   --Save-Add-Button-Hover-Background: hsl(150, 80%, 90%);
+
+  --Delete-Button-Border: hsl(0, 75%, 60%);
+  --Delete-Button-Background: hsl(0, 75%, 95%);
+  --Delete-Button-Text: hsl(0, 75%, 10%);
+  --Delete-Button-Hover-Background: hsl(0, 75%, 90%);
 
   --calendar-height: max(
     500px,
@@ -33,7 +39,7 @@
   --event-module-width: 250px;
 
   --date-font: Arial, Helvetica, sans-serif;
-  --date-font-size: 10px;
+  --date-font-size: 12px;
 }
 
 #root,
@@ -43,7 +49,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  scrollbar-gutter: stable;
+  /* scrollbar-gutter: stable; */
 
   height: 100vh;
   width: 100vw;
@@ -55,7 +61,7 @@ body {
   width: var(--calendar-width);
   height: var(--calendar-height);
   box-sizing: border-box;
-  padding: 10px; /* SOMETHING WRONG HERE - if the padding is 0, it overflows, at 10, it doesn't overflow or  "look" padded, at 20px, it "looks" like 10px padded -- the problem is PROBABLY more with sizing than padding*/
+  /* padding: 10px; SOMETHING WRONG HERE - if the padding is 0, it overflows, at 10, it doesn't overflow or  "look" padded, at 20px, it "looks" like 10px padded -- the problem is PROBABLY more with sizing than padding */
 }
 
 .calendar-nav {
@@ -169,7 +175,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: rgb(236, 226, 226);
+  /* background-color: rgb(236, 226, 226); */
   position: absolute;
 
   width: 100%;
@@ -184,33 +190,62 @@ body {
 }
 
 .calendar-event {
-  /* background-color: green; */
+  font-weight: 100;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 1.5em;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+
   width: calc(100% - 8px);
-  /* line-height: 1em; */
+
   overflow: hidden;
   text-overflow: clip;
   white-space: nowrap;
   box-sizing: border-box;
 
-  /* flex-direction: column; */
-
   text-overflow: clip;
-  margin: 5px;
-  box-shadow: 0 1px 0px var(--button-background);
-  /* text-wrap-style: auto; */
+  margin: 3px;
+  border: none;
 }
 .allday-event {
-  background-color: red;
+  color: white;
+  /* box-shadow: 0 1px 0px var(--button-background); */
 }
 .timed-event {
   background-color: transparent;
-  /* outline: none */
+  border: none;
 }
-
+.red-event.allday-event {
+  background-color: var(--red-event);
+}
+.blue-event.allday-event {
+  background-color: var(--blue-event);
+}
+.green-event.allday-event {
+  background-color: var(--green-event);
+}
+/* DOTS for timed events */
+.red-event.timed-event > .event-dot {
+  color: var(--red-event);
+  margin-left: -0.6em;
+  margin-right: 0.25em;
+}
+.blue-event.timed-event > .event-dot {
+  color: var(--blue-event);
+  margin-left: -0.6em;
+  margin-right: 0.25em;
+}
+.green-event.timed-event > .event-dot {
+  color: var(--green-event);
+  margin-left: -0.6em;
+  margin-right: 0.25em;
+}
+.event-time {
+  color: var(--weekday-text);
+  margin-right: 0.25em;
+}
 .out-of-month-day {
   background-color: var(--out-of-month-day-background);
 }
@@ -247,7 +282,8 @@ button.nav-arrow-button {
   border: none;
 }
 
-.event-module {
+.event-module,
+.edit-event-module {
   display: none;
   position: absolute;
   top: 50%;
@@ -273,9 +309,13 @@ button.nav-arrow-button {
   bottom: 0;
   background-color: hsla(0, 0%, 10%, 0.5);
 }
+.edit-event-module {
+  height: calc(var(--event-module-height) + 100px);
+}
 
 .overlay.show,
-.event-module.show {
+.event-module.show,
+.edit-event-module.show {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -318,6 +358,24 @@ button.nav-arrow-button {
   color: var(--Save-Add-Button-Text);
   background-color: var(--Save-Add-Button-Background);
   border-color: var(--Save-Add-Button-Border);
+}
+.edit-event-btns {
+  position: relative;
+  width: 90%;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--Save-Add-Button-Text);
+  background-color: var(--Save-Add-Button-Background);
+  border-color: var(--Save-Add-Button-Border);
+}
+.delete-btn {
+  color: var(--Delete-Button-Text);
+  background-color: var(--Delete-Button-Background);
+  border-color: var(--Delete-Button-Border);
+}
+.delete-btn:hover {
+  background-color: var(--Delete-Button-Hover-Background);
 }
 
 .event-submit-btn-section {

@@ -25,18 +25,15 @@ export function EventsProvider({ children }) {
     return stored ? JSON.parse(stored) : {}
   })
 
-  // sync to localStorage whenever events change
   useEffect(() => {
     localStorage.setItem("eventsStoredData", JSON.stringify(events))
   }, [events])
 
-  // retrieve all events for a specific date
   function getEventsForDate(date) {
     const key = format(date, "yyyy-MM-dd")
     return events[key] || []
   }
 
-  // add new event to a specific date
   function addEvent(date, eventObj) {
     const key = format(date, "yyyy-MM-dd")
     setEvents((prev) => {
@@ -45,7 +42,6 @@ export function EventsProvider({ children }) {
     })
   }
 
-  // optional: delete event by index
   function deleteEvent(date, index) {
     const key = format(date, "yyyy-MM-dd")
     setEvents((prev) => {
@@ -128,43 +124,9 @@ export function NewCalendar() {
   )
 }
 
-//
-// -------------------- EACH DATE CELL --------------------
-//
-// function EachDate({ date, index }) {
-//   const { visibleMonth, setShowEventModule, setSelectedEventDate } = useContext(DatesContext)
-
-//   const row = Math.floor(index / 7)
-//   const col = index % 7
-//   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-
-//   return (
-//     <div className={`date ${!isSameMonth(date, visibleMonth) && "out-of-month-day"} `}>
-//       <button
-//         onClick={() => {
-//           setShowEventModule(true) // FIXED: always open, not toggle
-//           setSelectedEventDate(date)
-//         }}
-//         className='add-event-btn'>
-//         +
-//       </button>
-
-//       <div className='date-header'>
-//         {row === 0 && <div className='weekday-label'>{weekdayLabels[col]} </div>}
-//         <div
-//           className={`date-num ${isToday(date) && "today"} ${
-//             isPast(date) && !isToday(date) && "prev-day"
-//           }`}>
-//           {date.getDate()}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
 function EachDate({ date, index }) {
   const { visibleMonth, setShowEventModule, setSelectedEventDate } = useContext(DatesContext)
-  const { getEventsForDate } = useEvents() // NEW
+  const { getEventsForDate } = useEvents() // NEW // getEventsForDate is destructed from the useEvents function, which returns a bunch of EventsContexts
 
   const row = Math.floor(index / 7)
   const col = index % 7
@@ -204,18 +166,21 @@ function EachDate({ date, index }) {
       <div className='events-list'>
         {sortedEvents.map((event, i) => (
           <button
+            onClick={() => {
+              setShowEventModule(true)
+              setSelectedEventDate(date) /* MAKE SURE THIS UPDATES SELECTED EVENT, NOT ADD NEW ONE*/
+            }}
             key={i}
-            className={`calendar-event ${event.eventAllday ? "allday-event" : "timed-event"}`}>
+            className={`calendar-event ${event.eventAllday ? "allday-event" : "timed-event"}
+             ${event.eventColor}-event`}
+            // style={{ backgroundColor: event.eventColor }}
+          >
             {event.eventAllday ? (
-              // --- All-day event: only the name
               <span className='event-name'>{event.eventName}</span>
             ) : (
-              // --- Timed event: colored dot + time + name
               <>
-                <span className='event-dot' style={{ color: event.eventColor }}>
-                  ●
-                </span>
-                <span className='event-time'>{event.eventTimes.start}</span>{" "}
+                <span className='event-dot'>●</span>
+                <span className='event-time'>{event.eventTimes.start}</span>
                 <span className='event-name'>{event.eventName}</span>
               </>
             )}
