@@ -1,4 +1,3 @@
-// -------------------- contexts/CalendarContext.jsx --------------------
 import { createContext, useContext, useMemo, useState } from "react"
 import {
   addMonths,
@@ -11,64 +10,64 @@ import {
 } from "date-fns"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
-// ---------------------------------------------------------------------
-// CALENDAR CONTEXT
-// Combines both "event data" logic (persistent) and "UI navigation" logic (ephemeral)
-// into a single cohesive source of truth for all calendar components.
-// ---------------------------------------------------------------------
+export const GLOBAL_EVENT_KEY_DATE_FORMAT = "yyyy-MM-dd"
 
 const CalendarContext = createContext()
 
 export function CalendarProvider({ children }) {
-  // 1. EVENT STATE (persistent)
+  ///MY THOUGHTS-
+  //  I don't really understand having a component, the purpose of which
+  //  is to be a context provider, it provides a million function and no jsx,
+  /// but you also have the separate CalendarContext, and then a
+  // function useCalendar for actually implementing this context stuff.
+  //  It feels unnecessarily convoluted
+
   const [events, setEvents] = useLocalStorage("eventsStoredData", {})
 
-  // Utility: Return all events for a given date key
   function getEventsForDate(date) {
-    const key = format(date, "yyyy-MM-dd")
+    const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     return events[key] || []
   }
 
-  // Utility: Add event immutably to the correct date key
-  function addEvent(date, eventObj) {
-    const key = format(date, "yyyy-MM-dd")
+  function addEvent(date, newEvent) {
+    const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
-      const prevEvents = prev[key] || []
-      // Explanation: spread previous object to preserve unrelated days,
-      // overwrite only the selected date key with its updated array.
-      return { ...prev, [key]: [...prevEvents, eventObj] }
+      const prevEventsForSelectedDate = prev[key] || []
+      return { ...prev, [key]: [...prevEventsForSelectedDate, newEvent] }
     })
-  }
+  } /// NOT REALLY UNDERSTANDING what's happening in the setEvent logic
 
-  // Utility: Delete event at given index
   function deleteEvent(date, index) {
-    const key = format(date, "yyyy-MM-dd")
+    const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
-      const prevEvents = prev[key] || []
-      return { ...prev, [key]: prevEvents.filter((_, i) => i !== index) }
+      const prevEventsForSelectedDate = prev[key] || []
+      return { ...prev, [key]: prevEventsForSelectedDate.filter((_, i) => i !== index) }
     })
   }
-// Update and replace event
-function updateEvent(date, index, updatedEvent) {
-  const key = format(date, "yyyy-MM-dd")
-  setEvents((prev) => {
-    const prevEvents = prev[key] || []
-    // Replace the event at the given index
-    const newEvents = [...prevEvents]
-    newEvents[index] = updatedEvent
-    return { ...prev, [key]: newEvents }
-  })
-}
 
+  //////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////
+  // Update and replace event
+  function updateEvent(date, index, updatedEvent) {
+    const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
+    setEvents((prev) => {
+      const prevEventsForSelectedDate = prev[key] || []
+      // Replace the event at the given index
+      const newEvents = [...prevEventsForSelectedDate] // copying array
+      newEvents[index] = updatedEvent // replacing original event at selected index
+      return { ...prev, [key]: newEvents }
+    })
+  } //THIS IS WHERE IT'S EDITING an event, which is still really deleting and replacing,
+  // but at least you keep the original index- I think
+  /////////////////////////////////////////////////////////////////////////////////
 
   // 2. UI STATE (ephemeral)
   const [visibleMonth, setVisibleMonth] = useState(new Date())
   const [showEventModule, setShowEventModule] = useState(false)
-  const [showEditEventModule, setShowEditEventModule] = useState(false) // NEW: edit modal state
+  const [showEditEventModule, setShowEditEventModule] = useState(false)
   const [selectedEventDate, setSelectedEventDate] = useState()
-  const [selectedEventIndex, setSelectedEventIndex] = useState(null) // NEW: which event is being edited
+  const [selectedEventIndex, setSelectedEventIndex] = useState(null)
 
-  // Computed: visible dates for current month view
   const visibleDates = useMemo(
     () =>
       eachDayOfInterval({
@@ -78,7 +77,6 @@ function updateEvent(date, index, updatedEvent) {
     [visibleMonth]
   )
 
-  // Calendar navigation helpers
   function showPreviousMonth() {
     setVisibleMonth((m) => addMonths(m, -1))
   }
@@ -94,7 +92,7 @@ function updateEvent(date, index, updatedEvent) {
   // - ui: navigation and modal state
   const value = useMemo(
     () => ({
-      eventsAPI: { events, getEventsForDate, addEvent, deleteEvent },
+      eventsAPI: { events, getEventsForDate, addEvent, deleteEvent, updateEvent },
       ui: {
         visibleMonth,
         setVisibleMonth,
@@ -103,10 +101,10 @@ function updateEvent(date, index, updatedEvent) {
         setShowEventModule,
         selectedEventDate,
         setSelectedEventDate,
-        showEditEventModule, // NEW
-        setShowEditEventModule, // NEW
-        selectedEventIndex, // NEW
-        setSelectedEventIndex, // NEW
+        showEditEventModule,
+        setShowEditEventModule,
+        selectedEventIndex,
+        setSelectedEventIndex,
         showPreviousMonth,
         showNextMonth,
       },
@@ -117,10 +115,13 @@ function updateEvent(date, index, updatedEvent) {
       visibleDates,
       showEventModule,
       selectedEventDate,
-      showEditEventModule, // NEW
-      selectedEventIndex, // NEW
-    ]
-  )
+      showEditEventModule,
+      selectedEventIndex,
+    ] // all I know if every var in the memo is in the d-array, and ofc none of the funtions are
+  ) // I don't fully understand this useMemo, or why it's one huge one instead of more, smaller useMemo'<s className="
+  // If the useMemo updates Everytime one of the items in the dependency array change, then doesn't that defeat the purpose of having a useMemo?
+  // What re-renders is it ignoring?
+  // Aren't functions supposed to be memo'ed inside of useCallbacks or something?
 
   return <CalendarContext.Provider value={value}>{children}</CalendarContext.Provider>
 }

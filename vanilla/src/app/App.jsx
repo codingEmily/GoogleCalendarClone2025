@@ -1,15 +1,10 @@
-import { Calendar } from "../oldVersions/Calendar"
-import { NewCalendar } from "../oldVersions/NewCalendar"
-import { ThirdCalendar } from "./ThirdCalendar"
-
+import { Calendar } from "./Calendar"
 import "./index.css"
 
 export default function App() {
   return (
     <>
-      {/* <Calendar></Calendar> */}
-      {/* <NewCalendar></NewCalendar> */}
-      <ThirdCalendar></ThirdCalendar>
+      <Calendar></Calendar>
     </>
   )
 }

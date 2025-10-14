@@ -1,9 +1,8 @@
-// components/EachDate.jsx
 import React, { useMemo } from "react"
 import { format, isSameMonth, isToday, isPast } from "date-fns"
-import { useCalendar } from "../contexts/CalendarContext"
-import EachEventDisplay from "./EachEventDisplay" // expects (event, onClick) or adapt as needed
-
+import { useCalendar } from "../../contexts/CalendarContext"
+import EventCell from "../eventCell/EventCell" // expects (event, onClick) or adapt as needed
+import "./dateCell.css"
 /*
   EachDate:
   - Responsible for one calendar cell.
@@ -12,7 +11,7 @@ import EachEventDisplay from "./EachEventDisplay" // expects (event, onClick) or
   - Uses ui actions (setShowEventModule, setSelectedEventDate) from context to open modal.
 */
 
-export default function EachDate({ date, index }) {
+export function DateCell({ date, index }) {
   const {
     ui: {
       visibleMonth,
@@ -75,7 +74,7 @@ export default function EachDate({ date, index }) {
         {sortedEvents.map((event, i) => (
           // EachEventDisplay is a tiny presentational component.
           // It should accept an onClick (we pass a handler that opens modal and sets date).
-          <EachEventDisplay
+          <EventCell
             key={i}
             event={event}
             index={i}

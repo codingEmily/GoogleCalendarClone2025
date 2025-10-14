@@ -24,7 +24,13 @@ export function useLocalStorage(key, initialValue) {
       console.error("useLocalStorage: failed to write", err)
     }
   }, [key, storedValue])
+  /// MY THOUGHTS- how does this run on storedValue being changed,
+  // because (a) storedValue is the value of a RETRIEVED item, so how does retrieving an item
+  //lead to storing an item?
+  // also (b) useLocalStorage does not have a param/prop for receiving
+  // new data (I guess useLocalStorage is implemented ONCE per SET of data -ex. ArrayOfEvents-
+  // and once it's implemented once everything else happens automatically?)
 
-  // --- 3. Return same interface as useState ---
+  // --- 3. Return same interface as useState --- // reasonable but I can't picture the implementation rn
   return [storedValue, setStoredValue]
 }
