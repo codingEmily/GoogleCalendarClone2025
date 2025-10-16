@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { format } from "date-fns"
-import { useCalendar } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
+import { useCalendar } from "../vanilla/src/contexts/CalendarContext"
+import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../vanilla/src/contexts/CalendarContext"
 // import "./eventModals.css"
 
 const GLOBAL_EVENT_STATE_InitialValue = {

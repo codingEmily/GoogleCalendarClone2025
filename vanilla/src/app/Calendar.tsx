@@ -2,9 +2,9 @@ import React from "react"
 import { format } from "date-fns"
 import { CalendarProvider, useCalendar } from "../contexts/CalendarContext"
 
-import { TypedDateCell } from "../components/dateCell/DateCell"
-import { TypedAddEventModal } from "../components/eventModals/EventModals"
-import { TypedEditEventModal } from "../components/eventModals/EventModals"
+import { DateCell } from "../components/dateCell/DateCell"
+import { AddEventModal } from "../components/eventModals/EventModals"
+import { EditEventModal } from "../components/eventModals/EventModals"
 
 export function Calendar() {
   return (
@@ -12,8 +12,8 @@ export function Calendar() {
       <div className='calendar'>
         <Nav />
         <MonthlyGrid />
-        <TypedAddEventModal />
-        <TypedEditEventModal />
+        <AddEventModal />
+        <EditEventModal />
       </div>
     </CalendarProvider>
   )
@@ -48,7 +48,7 @@ export function MonthlyGrid() {
   return (
     <div className='month-container'>
       {visibleDates.map((date: Date, index: number) => (
-        <TypedDateCell key={date.toDateString()} date={date} index={index} />
+        <DateCell key={date.toDateString()} date={date} index={index} />
       ))}
     </div>
   )

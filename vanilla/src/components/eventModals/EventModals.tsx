@@ -21,7 +21,7 @@ const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
   color: "red",
 }
 
-export function TypedAddEventModal() {
+export function AddEventModal() {
   const {
     ui: { showEventModule, setShowEventModule, selectedEventDate },
     eventsAPI: { addEvent },
@@ -172,7 +172,7 @@ export function TypedAddEventModal() {
 /* --------------------------------------------------------------------------------------- */
 /* EDIT EVENT MODULE */
 
-export function TypedEditEventModal() {
+export function EditEventModal() {
   const {
     ui: { showEditEventModule, setShowEditEventModule, selectedEventDate, selectedEventIndex },
     eventsAPI: { getEventsForDate, deleteEvent, updateEvent },

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { format, isSameMonth, isToday, isPast } from "date-fns"
 import { useCalendar } from "../../contexts/CalendarContext"
-import EventCell from "../../oldVersions/untypedComponents/UntypedEventCell"
+import EventCell from "../eventCell/EventCell"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import "./dateCell.css"
 
@@ -10,7 +10,7 @@ interface DateCellProps {
   index: number
 }
 
-export function TypedDateCell({ date, index }: DateCellProps) {
+export function DateCell({ date, index }: DateCellProps) {
   const {
     ui: {
       visibleMonth,

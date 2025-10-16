@@ -1,7 +1,7 @@
 // components/EditEventModal.jsx
 import React, { useState, useEffect } from "react"
 import { format } from "date-fns"
-import { useCalendar } from "./contexts/CalendarContext"
+import { useCalendar } from "../vanilla/src/contexts/CalendarContext"
 
 /*
   EditEventModal:
