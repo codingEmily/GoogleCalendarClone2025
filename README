@@ -56,8 +56,14 @@ The colors you use do not need to be 100% perfect matches to the colors used in 
 1. Create a `Calendar` component that renders the current month by default.
    - This calendar should fill the full screen height and width, but the width should never exceed 1500px.
    - This calendar should have buttons for going back/forward a month as well as for jumping to the current month.
-   - All dates prior to the current date should be partially transparent and/or faded out looking.
-   - All dates not in the currently visible month should be a darker background color.
+
+<!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
+
+- All dates prior to the current date should be partially transparent and/or faded out looking. //**\*\*\*\*** haven't done yet!!!!!!!!!!!! ******\*******/
+<!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
+
+- All dates not in the currently visible month should be a darker background color.
+
 2. Add a `+` button that allows you to create a new event for the specific day.
    - This should open a modal form for adding a new event.
    - The form should include a `name`, `allDay`, `startTime`, `endTime`, and `color` field.
@@ -72,15 +78,19 @@ The colors you use do not need to be 100% perfect matches to the colors used in 
    - This modal should have the same fields as the add event modal but should be pre-populated with the event data.
    - This modal should also have a delete button for removing an event.
 5. Store events in LocalStorage so they persist on page refresh.
+<!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
 6. If the number of events overflows the calendar day then render a `+X More` button at the bottom of the day that shows the number of events that overflow.
+
    - These overflow events should be rendered in a modal when the `+X More` button is clicked.
    - Clicking on one of the events in this modal should open the edit modal.
    - The overflow events should be hidden and not rendered at all in the DOM (except in the modal).
    - When the calendar day is resized the overflow events should be recalculated and rendered again.
    - When the number of events changes the overflow events should be recalculated and rendered again.
    - This is by far the hardest part of this project and will require a lot of thought and planning to get right.
+
 7. Add a opening/closing animation to the modals.
    - The modal should only be removed from the DOM after the animation finishes to ensure it has a nice smooth transition out.
+   <!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
 
 ## Rubric
 

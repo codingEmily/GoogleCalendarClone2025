@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, FormEvent } from "react"
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"

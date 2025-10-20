@@ -1,5 +1,5 @@
-import React, { useMemo } from "react"
 import { format, isSameMonth, isToday, isPast } from "date-fns"
+import { useMemo } from "react"
 import { useCalendar } from "../../contexts/CalendarContext"
 import EventCell from "../eventCell/EventCell"
 import type { CalendarEvent } from "../../contexts/CalendarContext"

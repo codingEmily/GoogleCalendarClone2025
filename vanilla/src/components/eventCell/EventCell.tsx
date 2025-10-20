@@ -1,7 +1,7 @@
-import React, { MouseEvent } from "react"
+import type { MouseEvent } from "react"
 import { useCalendar } from "../../contexts/CalendarContext"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
-import "../eventCell/eventCell.css"
+import "./eventCell.css"
 // import "vanilla/src/components/eventCell/eventCell.css"
 
 interface EventCellProps {

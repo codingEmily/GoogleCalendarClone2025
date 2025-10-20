@@ -33,7 +33,7 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     // recommended by gippity FOR THE JS -> JS TRANSITION, so they are  temporary
-    "allowJs": true, // revert to false after converting entire proj
+    "allowJs": false, // revert to false after converting entire proj
     "checkJs": false,
     "moduleResolution": "node",
     // Recommended Options
@@ -45,6 +45,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["oldVersions"]
+  "include": ["./vanilla/src"],
+  "exclude": ["./vanilla/oldVersions"]
 }
