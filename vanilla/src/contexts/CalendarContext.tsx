@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, ReactNode } from "react"
+import { createContext, useContext, useMemo, useState, type ReactNode } from "react"
 import {
   addMonths,
   eachDayOfInterval,
@@ -34,12 +34,16 @@ interface CalendarContextValue {
     visibleDates: Date[]
     showEventModule: boolean
     setShowEventModule: React.Dispatch<React.SetStateAction<boolean>>
-    selectedEventDate?: Date
+    selectedEventDate?: Date | undefined
     setSelectedEventDate: React.Dispatch<React.SetStateAction<Date | undefined>>
     showEditEventModule: boolean
     setShowEditEventModule: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventIndex: number | null
     setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
+    // NEW
+    showOverflowModule: boolean
+    setShowOverflowModule: React.Dispatch<React.SetStateAction<boolean>>
+    // NEW
     showPreviousMonth: () => void
     showNextMonth: () => void
   }
@@ -88,7 +92,10 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   const [visibleMonth, setVisibleMonth] = useState<Date>(new Date())
   const [showEventModule, setShowEventModule] = useState<boolean>(false)
   const [showEditEventModule, setShowEditEventModule] = useState<boolean>(false)
-  const [selectedEventDate, setSelectedEventDate] = useState<Date | undefined>()
+  //NEW
+  const [showOverflowModule, setShowOverflowModule] = useState<boolean>(false)
+  // NEW
+  const [selectedEventDate, setSelectedEventDate] = useState<Date>()
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null)
 
   const visibleDates = useMemo<Date[]>(
@@ -117,6 +124,10 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         visibleDates,
         showEventModule,
         setShowEventModule,
+        // NEW
+        showOverflowModule,
+        setShowOverflowModule,
+        //NEW
         selectedEventDate,
         setSelectedEventDate,
         showEditEventModule,

@@ -331,22 +331,12 @@ export function EditEventModal() {
             </label>
           </div>
 
-          <div
-            className='event-submit-btn-section'
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              height: "80px",
-              marginTop: "10px",
-              bottom: "0",
-            }}>
+          <div className='buttons-section'>
+            <button type='submit' className='edit-event-btns event-edit-btn '>
+              Edit
+            </button>
             <button type='button' className='edit-event-btns delete-btn' onClick={handleDelete}>
               Delete
-            </button>
-
-            <button type='submit' className='event-submit-btn edit-event-btns'>
-              Edit
             </button>
           </div>
         </form>

@@ -45,10 +45,12 @@ export function MonthlyGrid() {
   } = useCalendar()
 
   return (
-    <div className='month-container'>
-      {visibleDates.map((date: Date, index: number) => (
-        <DateCell key={date.toDateString()} date={date} index={index} />
-      ))}
-    </div>
+    <>
+      <div className='month-container'>
+        {visibleDates.map((date: Date, index: number) => (
+          <DateCell key={date.toDateString()} date={date} index={index} />
+        ))}
+      </div>
+    </>
   )
 }

@@ -77,14 +77,18 @@
 
 /* OVERLAY AND LAYOUT MODALS ENDS */
 
-/* CRUD BUTTONS BEGINS */
-.event-module-header-close-btn {
-  font-family: var(--date-font);
-  color: var(--default-text);
-  font-size: 15px;
-  border: none;
-}
+.buttons-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 
+  height: "80px";
+  margin-top: "10px";
+  bottom: "0";
+  /* transform: translate(-50%, -50%); */
+}
+/* CRUD BUTTONS BEGINS */
 .event-submit-btn {
   position: fixed;
   width: 90%;
@@ -97,10 +101,8 @@
 }
 .edit-event-btns {
   position: relative;
-  width: 90%;
+  width: 48%;
   bottom: 0px;
-  left: 50%;
-  transform: translate(-50%, -50%);
   color: var(--Save-Add-Button-Text);
   background-color: var(--Save-Add-Button-Background);
   border-color: var(--Save-Add-Button-Border);
@@ -121,6 +123,14 @@
 .event-submit-btn:hover {
   background-color: var(--Save-Add-Button-Hover-Background);
 }
+
+.event-module-header-close-btn {
+  font-family: var(--date-font);
+  color: var(--default-text);
+  font-size: 15px;
+  border: none;
+}
+
 /* CRUD BUTTONS ENDS */
 
 /*RADIO RESTYLING */
