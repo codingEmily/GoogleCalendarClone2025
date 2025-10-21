@@ -4,6 +4,7 @@ import { CalendarProvider, useCalendar } from "../contexts/CalendarContext"
 import { DateCell } from "../components/dateCell/DateCell"
 import { AddEventModal } from "../components/eventModals/EventModals"
 import { EditEventModal } from "../components/eventModals/EventModals"
+import { OverflowModal } from "../components/overflowModal/OverflowModal"
 
 export function Calendar() {
   return (
@@ -13,6 +14,7 @@ export function Calendar() {
         <MonthlyGrid />
         <AddEventModal />
         <EditEventModal />
+        <OverflowModal />
       </div>
     </CalendarProvider>
   )

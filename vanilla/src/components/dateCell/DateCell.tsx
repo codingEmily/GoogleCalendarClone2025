@@ -14,9 +14,10 @@ export function DateCell({ date, index }: DateCellProps) {
   const {
     ui: {
       visibleMonth,
-      setShowEventModule,
-      setShowEditEventModule,
-      setShowOverflowModule,
+      setShowEventModal,
+      setShowEditEventModal,
+      setShowOverflowModal,
+      showOverflowModal,
       setSelectedEventIndex,
       setSelectedEventDate,
     },
@@ -43,13 +44,14 @@ export function DateCell({ date, index }: DateCellProps) {
 
   const openEventModalForDate = () => {
     setSelectedEventDate(date)
-    setShowEventModule(true)
+    setShowEventModal(true)
   }
 
   const openOverflowModal = () => {
-    // setSelectedEventDate(date)
-    setShowOverflowModule(true)
-    console.log("see x more btn clicked")
+    setSelectedEventDate(date)
+    setShowOverflowModal(true)
+    console.log("DATE CELL - see x more btn clicked")
+    console.log("DATE CELL - showOverflowModal: ", showOverflowModal)
   }
 
   // --- Overflow tracking setup ---
@@ -132,7 +134,7 @@ export function DateCell({ date, index }: DateCellProps) {
       <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""}`}>
         {hiddenCount > 0 && (
           <button className='see-more-btn' onClick={openOverflowModal}>
-            See {hiddenCount} more
+            +{hiddenCount} More
           </button>
         )}
       </div>
@@ -158,8 +160,8 @@ export function DateCell({ date, index }: DateCellProps) {
 //   const {
 //     ui: {
 //       visibleMonth,
-//       setShowEventModule,
-//       setShowEditEventModule,
+//       setShowEventModal,
+//       setShowEditEventModal,
 //       setSelectedEventIndex,
 //       setSelectedEventDate,
 //     },
@@ -186,7 +188,7 @@ export function DateCell({ date, index }: DateCellProps) {
 
 //   const openEventModalForDate = () => {
 //     setSelectedEventDate(date)
-//     setShowEventModule(true)
+//     setShowEventModal(true)
 //   }
 
 //   return (

@@ -23,7 +23,7 @@ const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
 
 export function AddEventModal() {
   const {
-    ui: { showEventModule, setShowEventModule, selectedEventDate },
+    ui: { showEventModal, setShowEventModal, selectedEventDate },
     eventsAPI: { addEvent },
   } = useCalendar()
 
@@ -64,14 +64,14 @@ export function AddEventModal() {
       eventColor: eventData.color,
     })
 
-    setShowEventModule(false)
+    setShowEventModal(false)
     setEventData(GLOBAL_EVENT_STATE_DEFAULT)
   }
 
   return (
     <>
-      <div className={`overlay ${showEventModule ? "show" : ""}`} />
-      <div className={`event-module ${showEventModule ? "show" : ""}`}>
+      <div className={`overlay ${showEventModal ? "show" : ""}`} />
+      <div className={`event-module ${showEventModal ? "show" : ""}`}>
         <div className='event-module-header'>
           <span className='event-module-header-name'>Add Event</span>
           <span className='event-module-header-date'>
@@ -79,7 +79,7 @@ export function AddEventModal() {
           </span>
           <button
             className='event-module-header-close-btn'
-            onClick={() => setShowEventModule(false)}>
+            onClick={() => setShowEventModal(false)}>
             x
           </button>
         </div>
@@ -174,14 +174,14 @@ export function AddEventModal() {
 
 export function EditEventModal() {
   const {
-    ui: { showEditEventModule, setShowEditEventModule, selectedEventDate, selectedEventIndex },
+    ui: { showEditEventModal, setShowEditEventModal, selectedEventDate, selectedEventIndex },
     eventsAPI: { getEventsForDate, deleteEvent, updateEvent },
   } = useCalendar()
 
   const [eventData, setEventData] = useState<EventFormState>(GLOBAL_EVENT_STATE_DEFAULT)
 
   useEffect(() => {
-    if (showEditEventModule && selectedEventDate != null && selectedEventIndex != null) {
+    if (showEditEventModal && selectedEventDate != null && selectedEventIndex != null) {
       const events = getEventsForDate(selectedEventDate)
       const event = events[selectedEventIndex]
       if (event) {
@@ -194,7 +194,7 @@ export function EditEventModal() {
         })
       }
     }
-  }, [showEditEventModule, selectedEventDate, selectedEventIndex, getEventsForDate])
+  }, [showEditEventModal, selectedEventDate, selectedEventIndex, getEventsForDate])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -230,21 +230,21 @@ export function EditEventModal() {
       eventTimes: eventData.allDay ? null : { start: eventData.startTime, end: eventData.endTime },
       eventColor: eventData.color,
     })
-    setShowEditEventModule(false)
+    setShowEditEventModal(false)
   }
 
   const handleDelete = () => {
     if (!selectedEventDate || selectedEventIndex == null) return
     deleteEvent(selectedEventDate, selectedEventIndex)
-    setShowEditEventModule(false)
+    setShowEditEventModal(false)
   }
 
-  if (!showEditEventModule) return null
+  if (!showEditEventModal) return null
 
   return (
     <>
-      <div className={`overlay ${showEditEventModule ? "show" : ""}`} />
-      <div className={`edit-event-module ${showEditEventModule ? "show" : ""}`}>
+      <div className={`overlay ${showEditEventModal ? "show" : ""}`} />
+      <div className={`edit-event-module ${showEditEventModal ? "show" : ""}`}>
         <div className='event-module-header'>
           <span className='event-module-header-name'>Edit Event</span>
           <span className='event-module-header-date'>
@@ -252,7 +252,7 @@ export function EditEventModal() {
           </span>
           <button
             className='event-module-header-close-btn'
-            onClick={() => setShowEditEventModule(false)}>
+            onClick={() => setShowEditEventModal(false)}>
             x
           </button>
         </div>
@@ -332,7 +332,7 @@ export function EditEventModal() {
           </div>
 
           <div className='buttons-section'>
-            <button type='submit' className='edit-event-btns event-edit-btn '>
+            <button type='submit' className='edit-event-btns edit-event-btn '>
               Edit
             </button>
             <button type='button' className='edit-event-btns delete-btn' onClick={handleDelete}>

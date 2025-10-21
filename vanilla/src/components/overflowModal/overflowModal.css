@@ -1,5 +1,53 @@
 .overflow-modal {
+  /* display: block;
   height: 200px;
   width: 200px;
-  background-color: lightblue;
+  background-color: lightblue; */
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: var(--event-module-width);
+  height: var(--event-module-height);
+  color: black;
+  background-color: white;
+
+  padding: 0px 12px 12px 12px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.overflow-modal.show {
+  display: flex;
+  flex-direction: column;
+}
+
+.overflow-modal-header {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  padding-top: 5px;
+}
+
+.overflow-date {
+  /* position: absolute; */
+  margin-top: 7px;
+}
+
+.overflow-close-btn {
+  /* position: absolute; */
+  font-family: var(--date-font);
+  color: var(--default-text);
+  font-size: 15px;
+  border: none;
+  right: 0;
+  /* bottom: 0; */
+}
+
+.overflow-events-list {
+  /* position: relative; */
+  margin-top: 5px;
+  background-color: lightsalmon;
 }

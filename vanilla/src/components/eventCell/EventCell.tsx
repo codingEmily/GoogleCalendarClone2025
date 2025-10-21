@@ -12,14 +12,14 @@ interface EventCellProps {
 
 export default function EventCell({ event, index, date }: EventCellProps) {
   const {
-    ui: { setShowEditEventModule, setSelectedEventDate, setSelectedEventIndex },
+    ui: { setShowEditEventModal, setSelectedEventDate, setSelectedEventIndex },
   } = useCalendar()
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setSelectedEventDate(date)
     setSelectedEventIndex(index)
-    setShowEditEventModule(true)
+    setShowEditEventModal(true)
   }
 
   return (

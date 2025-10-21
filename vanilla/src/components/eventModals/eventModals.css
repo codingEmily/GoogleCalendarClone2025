@@ -1,6 +1,6 @@
 .form {
-  height: 100%;
-  width: 100%;
+  height: 80%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -35,9 +35,9 @@
   border-radius: 5px;
 }
 
-.edit-event-module {
+/* .edit-event-module {
   height: calc(var(--event-module-height) + 80px);
-}
+} */
 
 .overlay.show,
 .event-module.show,
@@ -90,6 +90,7 @@
 }
 /* CRUD BUTTONS BEGINS */
 .event-submit-btn {
+  font-weight: 200;
   position: fixed;
   width: 90%;
   bottom: 0px;
@@ -99,6 +100,20 @@
   background-color: var(--Save-Add-Button-Background);
   border-color: var(--Save-Add-Button-Border);
 }
+.event-submit-btn-section {
+  height: 20px;
+  padding-top: 5px;
+}
+.event-submit-btn:hover {
+  background-color: var(--Save-Add-Button-Hover-Background);
+}
+.event-module-header-close-btn {
+  font-family: var(--date-font);
+  color: var(--default-text);
+  font-size: 15px;
+  border: none;
+}
+
 .edit-event-btns {
   position: relative;
   width: 48%;
@@ -116,19 +131,13 @@
   background-color: var(--Delete-Button-Hover-Background);
 }
 
-.event-submit-btn-section {
-  height: 20px;
+.edit-event-btn {
+  color: var(--Save-Add-Button-Text);
+  background-color: var(--Save-Add-Button-Background);
+  border-color: var(--Save-Add-Button-Border);
 }
-
-.event-submit-btn:hover {
+.edit-event-btn:hover {
   background-color: var(--Save-Add-Button-Hover-Background);
-}
-
-.event-module-header-close-btn {
-  font-family: var(--date-font);
-  color: var(--default-text);
-  font-size: 15px;
-  border: none;
 }
 
 /* CRUD BUTTONS ENDS */

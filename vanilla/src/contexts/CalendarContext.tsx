@@ -10,7 +10,7 @@ import {
 } from "date-fns"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
-export const GLOBAL_EVENT_KEY_DATE_FORMAT = "yyyy-MM-dd"
+export const GLOBAL_EVENT_KEY_DATE_FORMAT = "M/dd/yy"
 
 export interface CalendarEvent {
   eventName: string
@@ -32,17 +32,17 @@ interface CalendarContextValue {
     visibleMonth: Date
     setVisibleMonth: React.Dispatch<React.SetStateAction<Date>>
     visibleDates: Date[]
-    showEventModule: boolean
-    setShowEventModule: React.Dispatch<React.SetStateAction<boolean>>
+    showEventModal: boolean
+    setShowEventModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventDate?: Date | undefined
     setSelectedEventDate: React.Dispatch<React.SetStateAction<Date | undefined>>
-    showEditEventModule: boolean
-    setShowEditEventModule: React.Dispatch<React.SetStateAction<boolean>>
+    showEditEventModal: boolean
+    setShowEditEventModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventIndex: number | null
     setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
     // NEW
-    showOverflowModule: boolean
-    setShowOverflowModule: React.Dispatch<React.SetStateAction<boolean>>
+    showOverflowModal: boolean
+    setShowOverflowModal: React.Dispatch<React.SetStateAction<boolean>>
     // NEW
     showPreviousMonth: () => void
     showNextMonth: () => void
@@ -90,10 +90,10 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   }
 
   const [visibleMonth, setVisibleMonth] = useState<Date>(new Date())
-  const [showEventModule, setShowEventModule] = useState<boolean>(false)
-  const [showEditEventModule, setShowEditEventModule] = useState<boolean>(false)
+  const [showEventModal, setShowEventModal] = useState<boolean>(false)
+  const [showEditEventModal, setShowEditEventModal] = useState<boolean>(false)
   //NEW
-  const [showOverflowModule, setShowOverflowModule] = useState<boolean>(false)
+  const [showOverflowModal, setShowOverflowModal] = useState<boolean>(false)
   // NEW
   const [selectedEventDate, setSelectedEventDate] = useState<Date>()
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null)
@@ -122,16 +122,16 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         visibleMonth,
         setVisibleMonth,
         visibleDates,
-        showEventModule,
-        setShowEventModule,
+        showEventModal,
+        setShowEventModal,
         // NEW
-        showOverflowModule,
-        setShowOverflowModule,
+        showOverflowModal,
+        setShowOverflowModal,
         //NEW
         selectedEventDate,
         setSelectedEventDate,
-        showEditEventModule,
-        setShowEditEventModule,
+        showEditEventModal,
+        setShowEditEventModal,
         selectedEventIndex,
         setSelectedEventIndex,
         showPreviousMonth,
@@ -142,10 +142,12 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
       events,
       visibleMonth,
       visibleDates,
-      showEventModule,
+      showEventModal,
       selectedEventDate,
-      showEditEventModule,
+      showEditEventModal,
       selectedEventIndex,
+      // NEW showOverflorModal
+      showOverflowModal,
     ]
   )
 

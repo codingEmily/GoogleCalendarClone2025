@@ -1,89 +1,48 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useEffect, useState, useMemo, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import "./overflowModal.css"
 
-interface EventFormState {
-  eventName: string
-  allDay: boolean
-  startTime: string
-  endTime: string
-  color: "red" | "green" | "blue"
+interface OverflowDatesProps {
+  date: Date
+  index: number
 }
 
-const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
-  eventName: "",
-  allDay: false,
-  startTime: "",
-  endTime: "",
-  color: "red",
-}
-
-export function OverflowModal() {
+export function OverflowModal({ date, index }: OverflowDatesProps) {
   const {
-    ui: { showOverflowModule, setShowOverflowModule, selectedEventDate },
+    ui: { showOverflowModal, setShowOverflowModal, selectedEventDate },
+    eventsAPI: { getEventsForDate },
   } = useCalendar()
 
-  const [eventData, setEventData] = useState<EventFormState>(GLOBAL_EVENT_STATE_DEFAULT)
+  const events: CalendarEvent[] = getEventsForDate(date) || []
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
-    setEventData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }))
-  }
+  const sortedEvents = useMemo(() => {
+    return [...events].sort((a, b) => {
+      if (a.eventAllDay && !b.eventAllDay) return -1
+      if (!a.eventAllDay && b.eventAllDay) return 1
+      if (a.eventAllDay && b.eventAllDay) return 0
 
-  //   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault()
-  //     if (!selectedEventDate) return
-
-  //     if (!eventData.eventName.trim()) {
-  //       alert("Event name is required.")
-  //       return
-  //     }
-
-  //     if (!eventData.allDay) {
-  //       if (!eventData.startTime || !eventData.endTime) {
-  //         alert("Start and End times are required if event is not all-day.")
-  //         return
-  //       }
-  //       if (eventData.endTime <= eventData.startTime) {
-  //         alert("End time must be later than start time.")
-  //         return
-  //       }
-  //     }
-
-  //     addEvent(selectedEventDate, {
-  //       eventName: eventData.eventName,
-  //       eventAllDay: eventData.allDay,
-  //       eventTimes: eventData.allDay ? null : { start: eventData.startTime, end: eventData.endTime },
-  //       eventColor: eventData.color,
-  //     })
-
-  //     setShowEventModule(false)
-  //     setEventData(GLOBAL_EVENT_STATE_DEFAULT)
-  //   }
+      const aStart = a.eventTimes?.start ?? ""
+      const bStart = b.eventTimes?.start ?? ""
+      return aStart.localeCompare(bStart)
+    })
+  }, [events])
 
   return (
     <>
-      <div className={`overlay ${showOverflowModule ? "show" : ""}`} />
-      <div className={`overflow-module ${showOverflowModule ? "show" : ""}`}>
-        <div className='event-module-header'>
-          <span className='event-module-header-name'>Events</span>
-          {/* <span className='event-module-header-date'>
-            {selectedEventDate ? format(selectedEventDate, GLOBAL_EVENT_KEY_DATE_FORMAT) : ""}
-          </span> */}
-          <button
-            className='event-module-header-close-btn'
-            onClick={() => setShowOverflowModule(false)}>
+      <div className={`overlay ${showOverflowModal ? "show" : ""}`} />
+      <div className={`overflow-modal ${showOverflowModal ? "show" : ""}`}>
+        <div className='overflow-module-header'>
+          <span className='overflow-date'>00/00/00</span>
+
+          <button className='overflow-close-btn' onClick={() => setShowOverflowModal(false)}>
             x
           </button>
         </div>
 
-        <div>/// SHOW EVENTS HERE</div>
+        <div className='overflow-events-list'>/// SHOW EVENTS HERE</div>
       </div>
     </>
   )
