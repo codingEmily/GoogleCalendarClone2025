@@ -2,8 +2,8 @@ import { format } from "date-fns"
 import { CalendarProvider, useCalendar } from "../contexts/CalendarContext"
 
 import { DateCell } from "../components/dateCell/DateCell"
-import { AddEventModal } from "../components/eventModals/EventModals"
-import { EditEventModal } from "../components/eventModals/EventModals"
+import { AddEventModal } from "../components/eventModals/AddEventModal"
+import { EditEventModal } from "../components/eventModals/EditEventModal"
 import { OverflowModal } from "../components/overflowModal/OverflowModal"
 
 export function Calendar() {

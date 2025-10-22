@@ -20,6 +20,22 @@ export interface CalendarEvent {
 }
 export type EventsMap = Record<string, CalendarEvent[]>
 
+export interface EventFormState {
+  eventName: string
+  allDay: boolean
+  startTime: string
+  endTime: string
+  color: "red" | "green" | "blue"
+}
+
+export const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
+  eventName: "",
+  allDay: false,
+  startTime: "",
+  endTime: "",
+  color: "red",
+}
+
 interface CalendarContextValue {
   eventsAPI: {
     events: EventsMap

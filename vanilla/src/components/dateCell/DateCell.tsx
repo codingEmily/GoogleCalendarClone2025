@@ -15,10 +15,8 @@ export function DateCell({ date, index }: DateCellProps) {
     ui: {
       visibleMonth,
       setShowEventModal,
-      setShowEditEventModal,
       setShowOverflowModal,
       showOverflowModal,
-      setSelectedEventIndex,
       setSelectedEventDate,
     },
     eventsAPI: { getEventsForDate },
@@ -29,7 +27,6 @@ export function DateCell({ date, index }: DateCellProps) {
   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
   const events: CalendarEvent[] = getEventsForDate(date) || []
-
   const sortedEvents = useMemo(() => {
     return [...events].sort((a, b) => {
       if (a.eventAllDay && !b.eventAllDay) return -1
@@ -133,7 +130,11 @@ export function DateCell({ date, index }: DateCellProps) {
       </div>
       <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""}`}>
         {hiddenCount > 0 && (
-          <button className='see-more-btn' onClick={openOverflowModal}>
+          <button
+            className='see-more-btn'
+            onClick={() => {
+              setSelectedEventDate(date), openOverflowModal()
+            }}>
             +{hiddenCount} More
           </button>
         )}
