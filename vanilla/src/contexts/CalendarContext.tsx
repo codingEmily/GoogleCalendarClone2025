@@ -11,6 +11,7 @@ import {
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
 export const GLOBAL_EVENT_KEY_DATE_FORMAT = "M/dd/yy"
+export const GLOBAL_EVENT_TIMES_FORMAT = "h:mm a"
 
 export interface CalendarEvent {
   eventName: string
@@ -30,7 +31,7 @@ export interface EventFormState {
 
 export const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
   eventName: "",
-  allDay: false,
+  allDay: true,
   startTime: "",
   endTime: "",
   color: "red",

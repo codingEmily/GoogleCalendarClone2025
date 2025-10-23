@@ -2,9 +2,11 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
+
 import { type EventFormState } from "../../contexts/CalendarContext"
+import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_STATE_DEFAULT } from "../../contexts/CalendarContext"
+import { GLOBAL_EVENT_TIMES_FORMAT } from "../../contexts/CalendarContext"
 import "./eventModals.css"
 
 export function EditEventModal() {
@@ -62,7 +64,12 @@ export function EditEventModal() {
     updateEvent(selectedEventDate, selectedEventIndex, {
       eventName: eventData.eventName,
       eventAllDay: eventData.allDay,
-      eventTimes: eventData.allDay ? null : { start: eventData.startTime, end: eventData.endTime },
+      eventTimes: eventData.allDay
+        ? null
+        : {
+            start: eventData.startTime,
+            end: eventData.endTime,
+          },
       eventColor: eventData.color,
     })
     setShowEditEventModal(false)

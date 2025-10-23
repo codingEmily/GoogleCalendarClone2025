@@ -3,6 +3,7 @@ import { format } from "date-fns"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
+import EventCell from "../eventCell/EventCell"
 import "./overflowModal.css"
 
 export function OverflowModal() {
@@ -26,8 +27,6 @@ export function OverflowModal() {
   //     })
   //   }
   // }, [showOverflowModal, selectedEventDate]) //dependency array
-
-  // setSelectedEventDate != null && const events: CalendarEvent[] = getEventsForDate(setSelectedEventDate) || []
 
   const events: CalendarEvent[] =
     selectedEventDate != null ? getEventsForDate(selectedEventDate) : []
@@ -57,7 +56,12 @@ export function OverflowModal() {
           </button>
         </div>
 
-        <div className='overflow-events-list'>{}</div>
+        <div className='overflow-events-list'>
+          {selectedEventDate != null &&
+            sortedEvents.map((event, i) => (
+              <EventCell key={i} event={event} index={i} date={selectedEventDate} />
+            ))}
+        </div>
       </div>
     </>
   )

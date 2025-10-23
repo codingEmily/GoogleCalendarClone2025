@@ -1,8 +1,4 @@
 .overflow-modal {
-  /* display: block;
-  height: 200px;
-  width: 200px;
-  background-color: lightblue; */
   display: none;
   position: absolute;
   top: 50%;
@@ -14,9 +10,11 @@
   color: black;
   background-color: white;
 
-  padding: 0px 12px 12px 12px;
+  padding: 20px 12px;
   box-sizing: border-box;
   border-radius: 5px;
+  overflow: auto;
+  overflow-x: hidden;
 }
 .overflow-modal.show {
   display: flex;
@@ -26,28 +24,28 @@
 .overflow-modal-header {
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
-  align-items: center;
-  padding-top: 5px;
 }
 
 .overflow-date {
-  /* position: absolute; */
   margin-top: 7px;
+  font-family: var(--date-font);
+  color: #555;
 }
 
 .overflow-close-btn {
-  /* position: absolute; */
   font-family: var(--date-font);
   color: var(--default-text);
-  font-size: 15px;
+  font-weight: 200;
+  position: absolute;
+  font-size: 16px;
   border: none;
   right: 0;
-  /* bottom: 0; */
 }
 
 .overflow-events-list {
-  /* position: relative; */
-  margin-top: 5px;
-  background-color: lightsalmon;
+  margin-top: 25px;
+}
+
+.overflow-events-list > * {
+  margin-bottom: 10px;
 }
