@@ -6,8 +6,8 @@ import { useCalendar } from "../../contexts/CalendarContext"
 import { type EventFormState } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_STATE_DEFAULT } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_TIMES_FORMAT } from "../../contexts/CalendarContext"
 import "./eventModals.css"
+import closeBtnImg from "../../app/symmetrical_x_btn.png"
 
 export function EditEventModal() {
   const {
@@ -86,22 +86,22 @@ export function EditEventModal() {
   return (
     <>
       <div className={`overlay ${showEditEventModal ? "show" : ""}`} />
-      <div className={`edit-event-module ${showEditEventModal ? "show" : ""}`}>
-        <div className='event-module-header'>
-          <span className='event-module-header-name'>Edit Event</span>
-          <span className='event-module-header-date'>
+      <div className={`event-modal ${showEditEventModal ? "show" : ""}`}>
+        <div className='event-modal-header'>
+          <span className='event-modal-header-name'>Edit Event</span>
+          <span className='event-modal-header-date'>
             {selectedEventDate ? format(selectedEventDate, GLOBAL_EVENT_KEY_DATE_FORMAT) : ""}
           </span>
           <button
-            className='event-module-header-close-btn'
+            className='event-modal-header-close-btn'
             onClick={() => setShowEditEventModal(false)}>
-            x
+            <img src={closeBtnImg} className='close-btn-img' alt='close btn'></img>
           </button>
         </div>
 
         <form className='form' onSubmit={handleSubmit}>
           <div className='event-label'>
-            <label className='name'>
+            <label className='name modal-form-label'>
               Name
               <br />
               <input
@@ -115,7 +115,7 @@ export function EditEventModal() {
           </div>
 
           <div className='event-label'>
-            <label className='allDay'>
+            <label className='allDay modal-form-label'>
               <input
                 type='checkbox'
                 name='allDay'
@@ -127,7 +127,7 @@ export function EditEventModal() {
           </div>
 
           <div className='event-label event-times'>
-            <label className='event-time'>
+            <label className='event-time modal-form-label'>
               Start Time
               <br />
               <input
@@ -139,7 +139,7 @@ export function EditEventModal() {
                 required={!eventData.allDay}
               />
             </label>
-            <label className='event-time'>
+            <label className='event-time modal-form-label'>
               End Time
               <br />
               <input
@@ -154,7 +154,7 @@ export function EditEventModal() {
           </div>
 
           <div className='event-label'>
-            <label className='color'>
+            <label className='color modal-form-label'>
               Color
               <br />
               <div className='radio-group'>

@@ -1,11 +1,12 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
-import { format, parse } from "date-fns"
+import { useState, type ChangeEvent, type FormEvent } from "react"
+import { format } from "date-fns"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_TIMES_FORMAT, useCalendar } from "../../contexts/CalendarContext"
+import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import { type EventFormState } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_STATE_DEFAULT } from "../../contexts/CalendarContext"
 import "./eventModals.css"
+import closeBtnImg from "../../app/symmetrical_x_btn.png"
 
 export function AddEventModal() {
   const {
@@ -62,22 +63,20 @@ export function AddEventModal() {
   return (
     <>
       <div className={`overlay ${showEventModal ? "show" : ""}`} />
-      <div className={`event-module ${showEventModal ? "show" : ""}`}>
-        <div className='event-module-header'>
-          <span className='event-module-header-name'>Add Event</span>
-          <span className='event-module-header-date'>
+      <div className={`event-modal ${showEventModal ? "show" : ""}`}>
+        <div className='event-modal-header'>
+          <span className='event-modal-header-name'>Add Event</span>
+          <span className='event-modal-header-date'>
             {selectedEventDate ? format(selectedEventDate, GLOBAL_EVENT_KEY_DATE_FORMAT) : ""}
           </span>
-          <button
-            className='event-module-header-close-btn'
-            onClick={() => setShowEventModal(false)}>
-            x
+          <button className='event-modal-header-close-btn' onClick={() => setShowEventModal(false)}>
+            <img className='close-btn-img' alt='close btn' src={closeBtnImg}></img>
           </button>
         </div>
 
         <form className='form' onSubmit={handleSubmit}>
           <div className='event-label'>
-            <label className='name'>
+            <label className='name modal-form-label'>
               Name
               <br />
               <input
@@ -91,7 +90,7 @@ export function AddEventModal() {
           </div>
 
           <div className='event-label'>
-            <label className='allday'>
+            <label className='allday modal-form-label'>
               <input
                 type='checkbox'
                 name='allDay'
@@ -103,9 +102,8 @@ export function AddEventModal() {
           </div>
 
           <div className='event-label event-times'>
-            <label className='event-time'>
-              Start Time
-              <br />
+            <label className='event-time modal-form-label'>
+              <span>Start Time</span>
               <input
                 type='time'
                 name='startTime'
@@ -115,9 +113,9 @@ export function AddEventModal() {
                 required={!eventData.allDay}
               />
             </label>
-            <label className='event-time'>
+
+            <label className='event-time modal-form-label'>
               End Time
-              <br />
               <input
                 type='time'
                 name='endTime'
@@ -130,7 +128,7 @@ export function AddEventModal() {
           </div>
 
           <div className='event-label'>
-            <label className='color'>
+            <label className='color modal-form-label'>
               Color
               <br />
               <div className='radio-group'>

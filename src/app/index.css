@@ -20,22 +20,23 @@
   --Delete-Button-Text: hsl(0, 75%, 10%);
   --Delete-Button-Hover-Background: hsl(0, 75%, 90%);
 
-  --calendar-height: max(
-    500px,
-    100%
-  ); /* calender DOES fill height and width, but I have to add a little padding*/
+  --calendar-height: max(500px, 100%);
   --calendar-width: clamp(300px, 100%, 1500px);
-  --nav-height: max(30px, 5%);
+  --nav-height: 50px;
+
   --month-grid-height: calc(var(--calendar-height) - var(--nav-height));
 
   --date-num-height: calc(var(--date-font-size) * 1.5);
-  /* --date-weekday-label-height: var(--date-font-size); */
   --date-weekday-label-height: 8px;
   --date-header-height: calc(var(--date-num-height) + var(--date-weekday-label-height));
 
-  --event-module-height: 300px;
-  --event-module-header-height: 30px;
-  --event-module-width: 260px;
+  --event-modal-height: 300px;
+  --event-modal-header-height: 30px;
+  --event-modal-width: 260px;
+
+  --timed-event-text: #777;
+  --modal-date-header-text: #555;
+  --modal-form-label-text: #777;
 
   --date-font: Arial, Helvetica, sans-serif;
   --date-font-size: 12px;
@@ -48,7 +49,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* scrollbar-gutter: stable; */
 
   height: 100vh;
   width: 100vw;
@@ -72,15 +72,17 @@ button {
   width: var(--calendar-width);
   height: var(--calendar-height);
   box-sizing: border-box;
-  padding: 10px; /* SOMETHING WRONG HERE - if the padding is 0, it overflows, at 10, it doesn't overflow or  "look" padded, at 20px, it "looks" like 10px padded -- the problem is PROBABLY more with sizing than padding */
+  overflow: auto;
 }
 
 .calendar-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: var(--calendar-width);
   height: var(--nav-height);
   font-size: larger;
   box-sizing: border-box;
-  margin-bottom: 10px;
 }
 
 .month-container {
@@ -96,12 +98,13 @@ button {
   justify-items: stretch;
 
   color: var(--temp-monthly-grid-border);
+  border: 1px solid var(--button-background);
+
   box-sizing: border-box;
 }
 
 .nav-month-header {
   color: var(--default-text);
-
   font-family: var(--date-font);
   font-weight: 600;
 }
@@ -109,9 +112,3 @@ button {
 button.nav-arrow-button {
   border: none;
 }
-
-/* MONTH AND EACH-DATE CSS STARTS HERE */
-/* MONTH AND EACH-DATE and EVENTS DISPLAYS CSS ENDS HERE */
-
-/* EVENT MODULE CSS BEGINS*/
-/* END EVENT MODULE CSS, including edit-event stuff */

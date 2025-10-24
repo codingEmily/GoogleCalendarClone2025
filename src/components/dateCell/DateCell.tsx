@@ -51,11 +51,9 @@ export function DateCell({ date, index }: DateCellProps) {
     console.log("DATE CELL - showOverflowModal: ", showOverflowModal)
   }
 
-  // --- Overflow tracking setup ---
   const eventsListRef = useRef<HTMLDivElement | null>(null)
   const [hiddenCount, setHiddenCount] = useState(0)
 
-  // Throttled overflow checker using requestAnimationFrame
   const checkOverflow = () => {
     const container = eventsListRef.current
     if (!container) return
@@ -77,7 +75,6 @@ export function DateCell({ date, index }: DateCellProps) {
     if (newHidden !== hiddenCount) setHiddenCount(newHidden)
   }
 
-  // Debounce wrapper to avoid over-triggering
   const scheduleCheck = (() => {
     let frame: number | null = null
     return () => {
@@ -89,7 +86,6 @@ export function DateCell({ date, index }: DateCellProps) {
     }
   })()
 
-  // Hook: observe size + child mutations
   useEffect(() => {
     const container = eventsListRef.current
     if (!container) return
@@ -100,20 +96,18 @@ export function DateCell({ date, index }: DateCellProps) {
     resizeObs.observe(container)
     mutationObs.observe(container, { childList: true })
 
-    // Initial measurement
     scheduleCheck()
 
-    // Cleanup
     return () => {
       resizeObs.disconnect()
       mutationObs.disconnect()
     }
-  }, [sortedEvents.length]) // trigger recalculation when event count changes
+  }, [sortedEvents.length])
 
   return (
     <div
       className={`date ${!isSameMonth(date, visibleMonth) ? "out-of-month-day" : ""}
-        ${isPast(date) && !isToday(date) ? "prev-day-overlay" : ""}`}>
+        `}>
       <button onClick={openEventModalForDate} className='add-event-btn'>
         +
       </button>
@@ -123,21 +117,26 @@ export function DateCell({ date, index }: DateCellProps) {
         <div className={`date-num ${isToday(date) ? "today" : ""}`}>{date.getDate()}</div>
       </div>
 
-      <div className={`events-list ${hiddenCount > 0 ? "overflow" : ""}`} ref={eventsListRef}>
+      <div
+        className={`events-list ${hiddenCount > 0 ? "overflow" : ""} ${
+          isPast(date) && !isToday(date) ? "prev-day" : ""
+        }`}
+        ref={eventsListRef}>
         {sortedEvents.map((event, i) => (
           <EventCell key={i} event={event} index={i} date={date} />
         ))}
-      </div>
-      <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""}`}>
-        {hiddenCount > 0 && (
-          <button
-            className='see-more-btn'
-            onClick={() => {
-              setSelectedEventDate(date), openOverflowModal()
-            }}>
-            +{hiddenCount} More
-          </button>
-        )}
+
+        <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""}`}>
+          {hiddenCount > 0 && (
+            <button
+              className='see-more-btn'
+              onClick={() => {
+                setSelectedEventDate(date), openOverflowModal()
+              }}>
+              +{hiddenCount} More
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

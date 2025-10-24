@@ -5,8 +5,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: var(--event-module-width);
-  height: var(--event-module-height);
+  width: var(--event-modal-width);
+  height: var(--event-modal-height);
   color: black;
   background-color: white;
 

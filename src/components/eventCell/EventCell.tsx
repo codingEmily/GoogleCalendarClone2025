@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react"
-import { format, parse } from "date-fns"
+import { format, parse, isPast, isToday } from "date-fns"
 import { GLOBAL_EVENT_TIMES_FORMAT, useCalendar } from "../../contexts/CalendarContext"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import "./eventCell.css"
@@ -31,15 +31,16 @@ export default function EventCell({ event, index, date }: EventCellProps) {
 
   function to12HourFormat(time: string): string {
     const date = parse(time, "HH:mm", new Date())
-    return format(date, "h:mm a")
+    return format(date, GLOBAL_EVENT_TIMES_FORMAT)
   }
 
   return (
     <>
       <button
-        className={`calendar-event ${event.eventAllDay ? "allday-event" : "timed-event"} ${
+        className={`calendar-event  ${event.eventAllDay ? "allday-event" : "timed-event"} ${
           event.eventColor
-        }-event`}
+        }-event 
+        ${isPast(date) && !isToday(date) ? "prev-day-overlay" : ""} `}
         onClick={handleClick}
         title={event.eventName}>
         {event.eventAllDay ? (

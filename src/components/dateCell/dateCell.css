@@ -2,7 +2,6 @@
 .date {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   position: relative;
   width: 100%;
@@ -16,6 +15,15 @@
   border-collapse: collapse;
 }
 
+.calendar-event.prev-day-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .out-of-month-day {
   background-color: var(--out-of-month-day-background);
 }
@@ -25,16 +33,10 @@
   background-color: var(--todays-date-txt-backgrnd);
 }
 
-.prev-day-overlay::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: hsla(0, 0%, 100%, 0.5);
-  pointer-events: none;
-  z-index: 0;
+.prev-day {
+  color: var(--weekday-text);
 }
 
-/* DATE CELL MINI COMPONENTS BEGINS */
 .date-header {
   font-family: var(--date-font);
   font-size: var(--date-font-size);
@@ -76,9 +78,8 @@
 
   color: var(--default-text);
   background-color: var(--out-of-month-day-background);
-  /* background-color: transparent; */
   border: none;
-  padding: 0; /*idk this is needed, BUT IT IS NEEDED */
+  padding: 0;
 }
 .date:hover .add-event-btn {
   display: block;
@@ -95,32 +96,30 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
   position: absolute;
 
   width: 100%;
   top: var(--date-header-height);
   height: calc(100% - var(--date-header-height));
-  /* bottom: 0; */
   overflow: hidden;
 }
 .events-list.overflow {
-  height: calc(100% - var(--date-header-height) - 16px);
+  height: calc(100% - var(--date-header-height));
 }
 
 .see-more-btn-section {
-  /* display: flex;
-  flex-direction: row;
-  justify-items: center; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 20px;
   position: absolute;
   bottom: 0;
-  padding-bottom: 2px;
-  width: fit-content;
+  width: 100%;
 }
 
 .see-more-btn {
-  display: block;
+  /* display: inline-block; */
   width: fit-content;
   border: none;
   background: none;
@@ -128,9 +127,10 @@
   color: var(--default-text);
   cursor: pointer;
   text-align: center;
-  margin-top: 2px;
-}
-/* DATE CELL MINI COMPONENTS ENDS */
+  /* margin-top: 2px; */
 
-/* INDIVIDUAL DATE CELL CSS BEGINS */
-/* INDIVIDUAL DATE CELL CSS ENDS */
+  /* position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%); */
+}
