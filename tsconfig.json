@@ -45,6 +45,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["./vanilla/src"],
-  "exclude": ["./vanilla/oldVersions"]
+  "include": ["./src"]
 }

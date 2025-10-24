@@ -1,3 +1,18 @@
+**_ INSTRUCTIONS FOR SETTING UP PROJECT_**
+
+# In the terminal run these commands, in order
+
+# 1. "npm i"
+
+# 2. "npm run dev"
+
+# Something like this should appear in the terminal, hit CTRL and click the underlined link to open in browser
+
+VITE v7.1.7 ready in 18074 ms
+➜ Local: http://localhost:5173/
+
+**_ INSTRUCTIONS ENDS - RUBRIC BEGINS_**
+
 # Final Project
 
 The final project of this course is a simplified Google Calendar clone. Even though this is a simplified clone it is still a quite complex project and is rather large so do not be surprised if this takes you a few days/weeks to complete. Some of the more complex parts of this project took me many hours to build.
@@ -59,7 +74,7 @@ The colors you use do not need to be 100% perfect matches to the colors used in 
 
 <!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
 
-- All dates prior to the current date should be partially transparent and/or faded out looking. //**\*\*\*\*** haven't done yet!!!!!!!!!!!! ******\*******/
+- All dates prior to the current date should be partially transparent and/or faded out looking. //**\*\*\*\*** haven't done yet!!!!!!!!!!!! **\*\***\***\*\***/
 <!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
 
 - All dates not in the currently visible month should be a darker background color.
