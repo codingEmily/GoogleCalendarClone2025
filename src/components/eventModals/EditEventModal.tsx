@@ -1,17 +1,26 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
-import type { CalendarEvent } from "../../contexts/CalendarContext"
-import { useCalendar } from "../../contexts/CalendarContext"
+import type { CalendarEvent, EventFormState } from "../../contexts/CalendarContext"
+import {
+  useCalendar,
+  to12HourFormat,
+  GLOBAL_EVENT_KEY_DATE_FORMAT,
+  GLOBAL_EVENT_STATE_DEFAULT,
+} from "../../contexts/CalendarContext"
 
-import { type EventFormState } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
-import { GLOBAL_EVENT_STATE_DEFAULT } from "../../contexts/CalendarContext"
 import "./eventModals.css"
 import closeBtnImg from "../../app/symmetrical_x_btn.png"
 
 export function EditEventModal() {
   const {
-    ui: { showEditEventModal, setShowEditEventModal, selectedEventDate, selectedEventIndex },
+    ui: {
+      showEditEventModal,
+      setShowEditEventModal,
+      selectedEventDate,
+      selectedEventIndex,
+      modalAnimatingOut,
+      setModalAnimatingOut,
+    },
     eventsAPI: { getEventsForDate, deleteEvent, updateEvent },
   } = useCalendar()
 
@@ -39,27 +48,49 @@ export function EditEventModal() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }))
+
+    if (name === "endTime") {
+      e.target.setCustomValidity("")
+    }
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedEventDate || selectedEventIndex == null) return
 
-    if (!eventData.eventName.trim()) {
-      alert("Event name is required.")
-      return
-    }
+    const form = e.currentTarget
+    const startInputEl = form.querySelector<HTMLInputElement>('input[name="startTime"]')
+    const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
+    endInputEl?.setCustomValidity("")
 
-    if (!eventData.allDay) {
-      if (!eventData.startTime || !eventData.endTime) {
-        alert("Start and End times are required if event is not all-day.")
-        return
-      }
-      if (eventData.endTime <= eventData.startTime) {
-        alert("End time must be later than start time.")
+    if (!eventData.allDay && startInputEl && endInputEl) {
+      const startValue = startInputEl.value
+      const endValue = endInputEl.value
+
+      if (startValue && endValue && endValue < startValue) {
+        endInputEl?.setCustomValidity(
+          `Value must be ${to12HourFormat(eventData.startTime)} or later.`
+        )
+        endInputEl?.reportValidity()
         return
       }
     }
+    // ****??????? // is this worth as double-safety, even tho the form catches these errors?
+    // if (!eventData.eventName.trim()) {
+    //   alert("Event name is required.")
+    //   return
+    // }
+
+    // if (!eventData.allDay) {
+    //   if (!eventData.startTime || !eventData.endTime) {
+    //     alert("Start and End times are required if event is not all-day.")
+    //     return
+    //   }
+    //   if (eventData.endTime <= eventData.startTime) {
+    //     alert("End time must be later than start time.")
+    //     return
+    //   }
+    // }
 
     updateEvent(selectedEventDate, selectedEventIndex, {
       eventName: eventData.eventName,

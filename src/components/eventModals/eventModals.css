@@ -14,13 +14,19 @@
   box-sizing: border-box;
   border-radius: 5px;
 }
-.overlay.show,
-.event-modal.show,
-.edit-event-modal.show {
+
+.overlay.show {
+  display: block;
+}
+.event-modal.show {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  animation: slide-into-view 0.25s ease-in forwards;
+}
+.event-modal.show.hide {
+  animation: slide-out-of-view 0.25s ease-out forwards;
 }
 
 /* OVERLAY AND LAYOUT MODALS BEGINS */
@@ -220,3 +226,27 @@ input[type="radio"] {
   background-color: var(--green-event);
 }
 /* RADIO RESTYLING ENDS*/
+
+@keyframes slide-into-view {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-of-view {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
+}

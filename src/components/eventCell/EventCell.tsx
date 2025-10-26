@@ -1,6 +1,10 @@
 import type { MouseEvent } from "react"
 import { format, parse, isPast, isToday } from "date-fns"
-import { GLOBAL_EVENT_TIMES_FORMAT, useCalendar } from "../../contexts/CalendarContext"
+import {
+  GLOBAL_EVENT_TIMES_FORMAT,
+  to12HourFormat,
+  useCalendar,
+} from "../../contexts/CalendarContext"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import "./eventCell.css"
 // import "vanilla/src/components/eventCell/eventCell.css"
@@ -27,11 +31,6 @@ export default function EventCell({ event, index, date }: EventCellProps) {
     setSelectedEventIndex(index)
     setShowEditEventModal(true)
     setShowOverflowModal(false)
-  }
-
-  function to12HourFormat(time: string): string {
-    const date = parse(time, "HH:mm", new Date())
-    return format(date, GLOBAL_EVENT_TIMES_FORMAT)
   }
 
   return (

@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react"
+import { parse } from "date-fns"
 import {
   addMonths,
   eachDayOfInterval,
@@ -9,9 +10,15 @@ import {
   startOfWeek,
 } from "date-fns"
 import { useLocalStorage } from "../hooks/useLocalStorage"
+import * as React from "react"
 
 export const GLOBAL_EVENT_KEY_DATE_FORMAT = "M/dd/yy"
 export const GLOBAL_EVENT_TIMES_FORMAT = "h:mm a"
+
+export function to12HourFormat(time: string): string {
+  const date = parse(time, "HH:mm", new Date())
+  return format(date, GLOBAL_EVENT_TIMES_FORMAT)
+}
 
 export interface CalendarEvent {
   eventName: string
@@ -54,13 +61,15 @@ interface CalendarContextValue {
     selectedEventDate?: Date | undefined
     setSelectedEventDate: React.Dispatch<React.SetStateAction<Date | undefined>>
     showEditEventModal: boolean
+    // NEW
+    modalAnimatingOut: boolean
+    setModalAnimatingOut: React.Dispatch<React.SetStateAction<boolean>>
+    // NEW
     setShowEditEventModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventIndex: number | null
     setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
-    // NEW
     showOverflowModal: boolean
     setShowOverflowModal: React.Dispatch<React.SetStateAction<boolean>>
-    // NEW
     showPreviousMonth: () => void
     showNextMonth: () => void
   }
@@ -109,9 +118,8 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   const [visibleMonth, setVisibleMonth] = useState<Date>(new Date())
   const [showEventModal, setShowEventModal] = useState<boolean>(false)
   const [showEditEventModal, setShowEditEventModal] = useState<boolean>(false)
-  //NEW
+  const [modalAnimatingOut, setModalAnimatingOut] = useState<boolean>(false)
   const [showOverflowModal, setShowOverflowModal] = useState<boolean>(false)
-  // NEW
   const [selectedEventDate, setSelectedEventDate] = useState<Date>()
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null)
 
@@ -141,14 +149,14 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         visibleDates,
         showEventModal,
         setShowEventModal,
-        // NEW
         showOverflowModal,
         setShowOverflowModal,
-        //NEW
         selectedEventDate,
         setSelectedEventDate,
         showEditEventModal,
         setShowEditEventModal,
+        modalAnimatingOut,
+        setModalAnimatingOut,
         selectedEventIndex,
         setSelectedEventIndex,
         showPreviousMonth,
@@ -163,8 +171,8 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
       selectedEventDate,
       showEditEventModal,
       selectedEventIndex,
-      // NEW showOverflorModal
       showOverflowModal,
+      modalAnimatingOut,
     ]
   )
 

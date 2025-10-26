@@ -104,7 +104,7 @@
   overflow: hidden;
 }
 .events-list.overflow {
-  height: calc(100% - var(--date-header-height));
+  height: calc(100% - var(--date-header-height) - 16px);
 }
 
 .see-more-btn-section {
@@ -119,7 +119,6 @@
 }
 
 .see-more-btn {
-  /* display: inline-block; */
   width: fit-content;
   border: none;
   background: none;
@@ -127,10 +126,4 @@
   color: var(--default-text);
   cursor: pointer;
   text-align: center;
-  /* margin-top: 2px; */
-
-  /* position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%); */
 }
