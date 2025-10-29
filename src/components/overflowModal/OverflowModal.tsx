@@ -4,29 +4,21 @@ import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import EventCell from "../eventCell/EventCell"
+import closeBtnImg from "../../app/symmetrical_x_btn.png"
 import "./overflowModal.css"
 
 export function OverflowModal() {
   const {
-    ui: { showOverflowModal, setShowOverflowModal, selectedEventDate, setSelectedEventDate },
+    ui: {
+      showOverflowModal,
+      setShowOverflowModal,
+      selectedEventDate,
+      setSelectedEventDate,
+      modalAnimatingOut,
+      setModalAnimatingOut,
+    },
     eventsAPI: { getEventsForDate },
   } = useCalendar()
-
-  // useCallback(() => {
-  //   if (showOverflowModal && selectedEventDate != null) {
-  //     const events: CalendarEvent[] = getEventsForDate(selectedEventDate) || []
-  //     console.log("useCallback response from overflowModal")
-  //     return [...events].sort((a, b) => {
-  //       if (a.eventAllDay && !b.eventAllDay) return -1
-  //       if (!a.eventAllDay && b.eventAllDay) return 1
-  //       if (a.eventAllDay && b.eventAllDay) return 0
-
-  //       const aStart = a.eventTimes?.start ?? ""
-  //       const bStart = b.eventTimes?.start ?? ""
-  //       return aStart.localeCompare(bStart)
-  //     })
-  //   }
-  // }, [showOverflowModal, selectedEventDate]) //dependency array
 
   const events: CalendarEvent[] =
     selectedEventDate != null ? getEventsForDate(selectedEventDate) : []
@@ -42,17 +34,30 @@ export function OverflowModal() {
     })
   }, [events])
 
+  const handleAnimationEnd = useCallback(() => {
+    if (modalAnimatingOut) {
+      setShowOverflowModal(false)
+      setModalAnimatingOut(false)
+    }
+  }, [modalAnimatingOut, setModalAnimatingOut, setShowOverflowModal])
+
+  if (!showOverflowModal && !modalAnimatingOut) return null
+
   return (
     <>
       <div className={`overlay ${showOverflowModal ? "show" : ""}`} />
-      <div className={`overflow-modal ${showOverflowModal ? "show" : ""}`}>
+      <div
+        className={`overflow-modal ${showOverflowModal ? "show" : ""} ${
+          modalAnimatingOut ? "hide" : ""
+        }`}
+        onAnimationEnd={handleAnimationEnd}>
         <div className='overflow-module-header'>
           <span className='overflow-date'>
             {selectedEventDate && `${format(selectedEventDate, GLOBAL_EVENT_KEY_DATE_FORMAT)}`}
           </span>
 
-          <button className='overflow-close-btn' onClick={() => setShowOverflowModal(false)}>
-            x
+          <button className='overflow-close-btn' onClick={() => setModalAnimatingOut(true)}>
+            <img className='close-btn-img' alt='close btn' src={closeBtnImg}></img>
           </button>
         </div>
 

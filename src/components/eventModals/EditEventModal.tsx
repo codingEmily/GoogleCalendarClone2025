@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useEffect, useState, useCallback, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
 import type { CalendarEvent, EventFormState } from "../../contexts/CalendarContext"
 import {
@@ -75,22 +75,6 @@ export function EditEventModal() {
         return
       }
     }
-    // ****??????? // is this worth as double-safety, even tho the form catches these errors?
-    // if (!eventData.eventName.trim()) {
-    //   alert("Event name is required.")
-    //   return
-    // }
-
-    // if (!eventData.allDay) {
-    //   if (!eventData.startTime || !eventData.endTime) {
-    //     alert("Start and End times are required if event is not all-day.")
-    //     return
-    //   }
-    //   if (eventData.endTime <= eventData.startTime) {
-    //     alert("End time must be later than start time.")
-    //     return
-    //   }
-    // }
 
     updateEvent(selectedEventDate, selectedEventIndex, {
       eventName: eventData.eventName,
@@ -112,12 +96,23 @@ export function EditEventModal() {
     setShowEditEventModal(false)
   }
 
-  if (!showEditEventModal) return null
+  const handleAnimationEnd = useCallback(() => {
+    if (modalAnimatingOut) {
+      setShowEditEventModal(false)
+      setModalAnimatingOut(false)
+    }
+  }, [modalAnimatingOut, setModalAnimatingOut, setShowEditEventModal])
+
+  if (!showEditEventModal && !modalAnimatingOut) return null
 
   return (
     <>
       <div className={`overlay ${showEditEventModal ? "show" : ""}`} />
-      <div className={`event-modal ${showEditEventModal ? "show" : ""}`}>
+      <div
+        className={`event-modal ${showEditEventModal ? "show" : ""}  ${
+          modalAnimatingOut ? "hide" : ""
+        }`}
+        onAnimationEnd={handleAnimationEnd}>
         <div className='event-modal-header'>
           <span className='event-modal-header-name'>Edit Event</span>
           <span className='event-modal-header-date'>
@@ -125,7 +120,7 @@ export function EditEventModal() {
           </span>
           <button
             className='event-modal-header-close-btn'
-            onClick={() => setShowEditEventModal(false)}>
+            onClick={() => setModalAnimatingOut(true)}>
             <img src={closeBtnImg} className='close-btn-img' alt='close btn'></img>
           </button>
         </div>

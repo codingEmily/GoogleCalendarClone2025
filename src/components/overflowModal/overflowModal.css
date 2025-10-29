@@ -19,6 +19,11 @@
 .overflow-modal.show {
   display: flex;
   flex-direction: column;
+  animation: slide-into-view 0.25s ease-in forwards;
+}
+
+.overflow-modal.show.hide {
+  animation: slide-out-of-view 0.25s ease-out forwards;
 }
 
 .overflow-modal-header {
@@ -48,4 +53,49 @@
 
 .overflow-events-list > * {
   margin-bottom: 10px;
+}
+
+.overflow-close-btn img {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+}
+
+/* overLAY css */
+.overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsla(0, 0%, 10%, 0.5);
+}
+
+.overlay.show {
+  display: block;
+}
+
+@keyframes slide-into-view {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-of-view {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
 }

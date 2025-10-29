@@ -122,7 +122,7 @@ export function DateCell({ date, index }: DateCellProps) {
   return (
     <div
       className={`date ${!isSameMonth(date, visibleMonth) ? "out-of-month-day" : ""}
-        `}>
+         ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}>
       <button onClick={openEventModalForDate} className='add-event-btn'>
         +
       </button>
@@ -141,10 +141,10 @@ export function DateCell({ date, index }: DateCellProps) {
           <EventCell key={i} event={event} index={i} date={date} />
         ))}
       </div>
-      <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""}`}>
+      <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""} `}>
         {hiddenCount > 0 && (
           <button
-            className='see-more-btn'
+            className={`see-more-btn ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}
             onClick={() => {
               setSelectedEventDate(date), openOverflowModal()
             }}>

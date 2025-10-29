@@ -127,3 +127,6 @@
   cursor: pointer;
   text-align: center;
 }
+.see-more-btn.prev-day {
+  color: var(--weekday-text);
+}
