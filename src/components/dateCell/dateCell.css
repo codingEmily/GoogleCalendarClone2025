@@ -6,6 +6,8 @@
   position: relative;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
 
   color: var(--default-text);
   background-color: white;
@@ -30,7 +32,7 @@
 
 .today {
   color: white;
-  background-color: var(--todays-date-txt-backgrnd);
+  background-color: var(--todays-date-txt-background);
 }
 
 .prev-day {
@@ -44,11 +46,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: var(--date-header-height);
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  height: fit-content;
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 .date-num {
@@ -80,6 +81,7 @@
   background-color: var(--out-of-month-day-background);
   border: none;
   padding: 0;
+  z-index: 10;
 }
 .date:hover .add-event-btn {
   display: block;
@@ -89,23 +91,21 @@
   font-size: calc(var(--date-font-size) * 0.8);
   height: var(--date-weekday-label-height);
   color: var(--weekday-text);
-  border-radius: 50%;
 }
 
 .events-list {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  position: absolute;
-
   width: 100%;
-  top: var(--date-header-height);
-  height: calc(100% - var(--date-header-height));
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
   overflow: hidden;
 }
-.events-list.overflow {
+/* .events-list.overflow {
   height: calc(100% - var(--date-header-height) - 16px);
-}
+} */
 
 .see-more-btn-section {
   display: flex;
@@ -113,9 +113,8 @@
   align-items: center;
   justify-content: center;
   height: 20px;
-  position: absolute;
-  bottom: 0;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .see-more-btn {

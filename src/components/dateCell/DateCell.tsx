@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { format, isSameMonth, isToday, isPast } from "date-fns"
+import { isSameMonth, isToday, isPast } from "date-fns"
 import { useCalendar } from "../../contexts/CalendarContext"
 import EventCell from "../eventCell/EventCell"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
@@ -16,9 +16,7 @@ export function DateCell({ date, index }: DateCellProps) {
       visibleMonth,
       setShowAddEventModal,
       setShowOverflowModal,
-      showOverflowModal,
       setSelectedEventDate,
-      modalAnimatingOut,
       setModalAnimatingOut,
     },
     eventsAPI: { getEventsForDate },
@@ -29,6 +27,8 @@ export function DateCell({ date, index }: DateCellProps) {
   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
   const events: CalendarEvent[] = getEventsForDate(date) || []
+
+  // Sort events: all-day first, then by start time
   const sortedEvents = useMemo(() => {
     return [...events].sort((a, b) => {
       if (a.eventAllDay && !b.eventAllDay) return -1
@@ -41,6 +41,12 @@ export function DateCell({ date, index }: DateCellProps) {
     })
   }, [events])
 
+  const eventsListRef = useRef<HTMLDivElement | null>(null)
+  const [visibleCount, setVisibleCount] = useState(sortedEvents.length)
+
+  // Calculate how many events are hidden
+  const hiddenCount = Math.max(0, sortedEvents.length - visibleCount)
+
   const openEventModalForDate = () => {
     setSelectedEventDate(date)
     setShowAddEventModal(true)
@@ -52,64 +58,103 @@ export function DateCell({ date, index }: DateCellProps) {
     setShowOverflowModal(true)
   }
 
-  const eventsListRef = useRef<HTMLDivElement | null>(null)
-  const [hiddenCount, setHiddenCount] = useState(0)
-
-  const checkOverflow = () => {
+  /**
+   * Calculate which events are fully visible in the container.
+   * An event is considered visible only if it's FULLY within the visible area.
+   * Partially visible events are treated as hidden for better UX.
+   */
+  const calculateVisibleEvents = () => {
     const container = eventsListRef.current
-    if (!container) return
+    if (!container) return sortedEvents.length
 
-    const total = container.children.length
-    if (total === 0) {
-      if (hiddenCount !== 0) setHiddenCount(0)
-      return
+    const children = Array.from(container.children) as HTMLElement[]
+    if (children.length === 0) return 0
+
+    // Get the actual visible height of the container
+    const containerRect = container.getBoundingClientRect()
+    const containerTop = containerRect.top
+    const containerBottom = containerRect.bottom
+    const availableHeight = containerRect.height
+
+    // If container has no height, nothing is visible
+    if (availableHeight <= 0) return 0
+
+    let visibleCount = 0
+
+    for (const child of children) {
+      const childRect = child.getBoundingClientRect()
+      const childTop = childRect.top
+      const childBottom = childRect.bottom
+
+      // Event is fully visible if both top and bottom are within container bounds
+      // We add a small tolerance (1px) for floating point precision issues
+      const isFullyVisible = childTop >= containerTop - 1 && childBottom <= containerBottom + 1
+
+      if (isFullyVisible) {
+        visibleCount++
+      } else if (childTop < containerBottom) {
+        // Event is partially visible - stop counting here
+        // All subsequent events will also be hidden
+        break
+      }
     }
 
-    const containerBottom = container.clientHeight
-    let visible = 0
-    for (const child of Array.from(container.children)) {
-      const el = child as HTMLElement
-      if (el.offsetTop + el.offsetHeight <= containerBottom) visible++
-    }
-
-    const newHidden = Math.max(total - visible, 0)
-    if (newHidden !== hiddenCount) setHiddenCount(newHidden)
+    return visibleCount
   }
 
-  const scheduleCheck = (() => {
-    let frame: number | null = null
-    return () => {
-      if (frame) cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => {
-        checkOverflow()
-        frame = null
-      })
-    }
-  })()
+  /**
+   * Update the visible count, debounced with RAF for performance
+   */
+  const updateVisibleCount = useRef<number | null>(null)
 
+  const scheduleVisibilityCheck = () => {
+    if (updateVisibleCount.current !== null) {
+      cancelAnimationFrame(updateVisibleCount.current)
+    }
+
+    updateVisibleCount.current = requestAnimationFrame(() => {
+      const newVisibleCount = calculateVisibleEvents()
+      setVisibleCount(newVisibleCount)
+      updateVisibleCount.current = null
+    })
+  }
+
+  /**
+   * Set up observers to detect when recalculation is needed:
+   * - ResizeObserver: when container size changes
+   * - MutationObserver: when events are added/removed
+   */
   useEffect(() => {
     const container = eventsListRef.current
     if (!container) return
 
-    const resizeObs = new ResizeObserver(scheduleCheck)
-    const mutationObs = new MutationObserver(scheduleCheck)
+    // Initial check after a short delay to ensure layout is complete
+    const initialTimeout = setTimeout(scheduleVisibilityCheck, 0)
 
-    resizeObs.observe(container)
-    mutationObs.observe(container, { childList: true })
+    const resizeObserver = new ResizeObserver(scheduleVisibilityCheck)
+    const mutationObserver = new MutationObserver(scheduleVisibilityCheck)
 
-    scheduleCheck()
+    resizeObserver.observe(container)
+    mutationObserver.observe(container, {
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
-      resizeObs.disconnect()
-      mutationObs.disconnect()
+      clearTimeout(initialTimeout)
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+      if (updateVisibleCount.current !== null) {
+        cancelAnimationFrame(updateVisibleCount.current)
+      }
     }
-  }, [sortedEvents.length])
+  }, [sortedEvents.length]) // Re-run when number of events changes
 
   return (
     <div
       className={`date ${!isSameMonth(date, visibleMonth) ? "out-of-month-day" : ""}
          ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}>
-      <button onClick={openEventModalForDate} className='add-event-btn'>
+      <button onClick={openEventModalForDate} className='add-event-btn' aria-label='Add event'>
         +
       </button>
 
@@ -124,20 +169,165 @@ export function DateCell({ date, index }: DateCellProps) {
         }`}
         ref={eventsListRef}>
         {sortedEvents.map((event, i) => (
-          <EventCell key={i} event={event} index={i} date={date} />
+          <EventCell key={event.id || i} event={event} index={i} date={date} />
         ))}
       </div>
-      <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""} `}>
-        {hiddenCount > 0 && (
+
+      {hiddenCount > 0 && (
+        <div className='see-more-btn-section show'>
           <button
             className={`see-more-btn ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}
-            onClick={() => {
-              setSelectedEventDate(date), openOverflowModal()
-            }}>
+            onClick={openOverflowModal}
+            aria-label={`Show ${hiddenCount} more events`}>
             +{hiddenCount} More
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
+///////////////////////////////////////////////////////////////////////
+
+// import { useEffect, useMemo, useRef, useState } from "react"
+// import { format, isSameMonth, isToday, isPast } from "date-fns"
+// import { useCalendar } from "../../contexts/CalendarContext"
+// import EventCell from "../eventCell/EventCell"
+// import type { CalendarEvent } from "../../contexts/CalendarContext"
+// import "./dateCell.css"
+
+// interface DateCellProps {
+//   date: Date
+//   index: number
+// }
+
+// export function DateCell({ date, index }: DateCellProps) {
+//   const {
+//     ui: {
+//       visibleMonth,
+//       setShowAddEventModal,
+//       setShowOverflowModal,
+//       showOverflowModal,
+//       setSelectedEventDate,
+//       modalAnimatingOut,
+//       setModalAnimatingOut,
+//     },
+//     eventsAPI: { getEventsForDate },
+//   } = useCalendar()
+
+//   const row = Math.floor(index / 7)
+//   const col = index % 7
+//   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+
+//   const events: CalendarEvent[] = getEventsForDate(date) || []
+//   const sortedEvents = useMemo(() => {
+//     return [...events].sort((a, b) => {
+//       if (a.eventAllDay && !b.eventAllDay) return -1
+//       if (!a.eventAllDay && b.eventAllDay) return 1
+//       if (a.eventAllDay && b.eventAllDay) return 0
+
+//       const aStart = a.eventTimes?.start ?? ""
+//       const bStart = b.eventTimes?.start ?? ""
+//       return aStart.localeCompare(bStart)
+//     })
+//   }, [events])
+
+//   const openEventModalForDate = () => {
+//     setSelectedEventDate(date)
+//     setShowAddEventModal(true)
+//     setModalAnimatingOut(false)
+//   }
+
+//   const openOverflowModal = () => {
+//     setSelectedEventDate(date)
+//     setShowOverflowModal(true)
+//   }
+
+//   const eventsListRef = useRef<HTMLDivElement | null>(null)
+//   const [hiddenCount, setHiddenCount] = useState(0)
+
+//   const checkOverflow = () => {
+//     const container = eventsListRef.current
+//     if (!container) return
+
+//     const total = container.children.length
+//     if (total === 0) {
+//       if (hiddenCount !== 0) setHiddenCount(0)
+//       return
+//     }
+
+//     const containerBottom = container.clientHeight
+//     let visible = 0
+//     for (const child of Array.from(container.children)) {
+//       const el = child as HTMLElement
+//       if (el.offsetTop + el.offsetHeight <= containerBottom) visible++
+//     }
+
+//     const newHidden = Math.max(total - visible, 0)
+//     if (newHidden !== hiddenCount) setHiddenCount(newHidden)
+//   }
+
+//   const scheduleCheck = (() => {
+//     let frame: number | null = null
+//     return () => {
+//       if (frame) cancelAnimationFrame(frame)
+//       frame = requestAnimationFrame(() => {
+//         checkOverflow()
+//         frame = null
+//       })
+//     }
+//   })()
+
+//   useEffect(() => {
+//     const container = eventsListRef.current
+//     if (!container) return
+
+//     const resizeObs = new ResizeObserver(scheduleCheck)
+//     const mutationObs = new MutationObserver(scheduleCheck)
+
+//     resizeObs.observe(container)
+//     mutationObs.observe(container, { childList: true })
+
+//     scheduleCheck()
+
+//     return () => {
+//       resizeObs.disconnect()
+//       mutationObs.disconnect()
+//     }
+//   }, [sortedEvents.length])
+
+//   return (
+//     <div
+//       className={`date ${!isSameMonth(date, visibleMonth) ? "out-of-month-day" : ""}
+//          ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}>
+//       <button onClick={openEventModalForDate} className='add-event-btn'>
+//         +
+//       </button>
+
+//       <div className='date-header'>
+//         {row === 0 && <div className='weekday-label'>{weekdayLabels[col]}</div>}
+//         <div className={`date-num ${isToday(date) ? "today" : ""}`}>{date.getDate()}</div>
+//       </div>
+
+//       <div
+//         className={`events-list ${hiddenCount > 0 ? "overflow" : ""} ${
+//           isPast(date) && !isToday(date) ? "prev-day" : ""
+//         }`}
+//         ref={eventsListRef}>
+//         {sortedEvents.map((event, i) => (
+//           <EventCell key={i} event={event} index={i} date={date} />
+//         ))}
+//       </div>
+//       <div className={`see-more-btn-section ${hiddenCount > 0 ? "show" : ""} `}>
+//         {hiddenCount > 0 && (
+//           <button
+//             className={`see-more-btn ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}
+//             onClick={() => {
+//               setSelectedEventDate(date), openOverflowModal()
+//             }}>
+//             +{hiddenCount} More
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   )
+// }

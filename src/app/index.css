@@ -27,7 +27,7 @@
 
   --date-num-height: calc(var(--date-font-size) * 1.5);
   --date-weekday-label-height: 8px;
-  --date-header-height: calc(var(--date-num-height) + var(--date-weekday-label-height));
+  /* --date-header-height: calc(var(--date-num-height) + var(--date-weekday-label-height)); */
 
   --event-modal-height: 300px;
   --event-modal-header-height: 30px;
@@ -95,6 +95,7 @@ button {
 
   align-items: stretch;
   justify-items: stretch;
+  position: absolute;
 
   color: var(--temp-monthly-grid-border);
   border: 1px solid var(--button-background);

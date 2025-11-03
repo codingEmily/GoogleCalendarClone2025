@@ -1,17 +1,34 @@
 **_ INSTRUCTIONS FOR SETTING UP PROJECT_**
 
-# In the terminal run these commands, in order
+# Instruction assume that you already have (a) an account set up with a coding editor, preferably VSC, (b) node.js and git installed, and set up in your editor
 
-# 1. "npm i"
+# First clone this project from my account, if you have not already done so.
 
-# 2. "npm run dev"
+1.  Click the green button that says "Code"
+
+2.  From the Local tab, select the HTTPS option (these should be the default)
+
+3.  Copy the github link provided
+
+# Open VSC, or your editor (if you use another editor/terminal your cmds syntax may differ slightly)
+
+# In the terminal (powershell) run these commands, in order
+
+0. A. (if you haven't already cloned into the project) run "git clone XYZ" where XYZ is the copied github link
+1. B. Once cloned into project, assure that you are cd'ed into the folder "GoogleCalendarClone2025"
+
+2. "npm i"
+
+3. "npm run dev"
 
 # Something like this should appear in the terminal, press CTRL while clicking the underlined link to open in browser
 
-VITE v7.1.7 ready in 18074 ms
-➜ Local: http://localhost:5173/
+# VITE v7.1.7 ready in 18074 ms
 
-**_ INSTRUCTIONS ENDS - RUBRIC BEGINS_**
+# ➜ Local: http://localhost:5173/
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+**_ RUBRIC _**
 
 # Final Project
 
