@@ -4,7 +4,8 @@ import type { CalendarEvent } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import EventCell from "../eventCell/EventCell"
-import closeBtnImg from "../../app/symmetrical_x_btn.png"
+import closeBtnImg from "../../img/symmetrical_x_btn.png"
+
 import "./overflowModal.css"
 
 export function OverflowModal() {
@@ -57,7 +58,7 @@ export function OverflowModal() {
           </span>
 
           <button className='overflow-close-btn' onClick={() => setModalAnimatingOut(true)}>
-            <img className='close-btn-img' alt='close btn' src={closeBtnImg}></img>
+            <img className='close-btn-img' alt='close button' src={closeBtnImg}></img>
           </button>
         </div>
 

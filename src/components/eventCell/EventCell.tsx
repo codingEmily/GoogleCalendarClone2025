@@ -7,7 +7,6 @@ import {
 } from "../../contexts/CalendarContext"
 import type { CalendarEvent } from "../../contexts/CalendarContext"
 import "./eventCell.css"
-// import "vanilla/src/components/eventCell/eventCell.css"
 
 interface EventCellProps {
   event: CalendarEvent

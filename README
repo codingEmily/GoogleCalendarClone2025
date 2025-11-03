@@ -99,7 +99,6 @@ The colors you use do not need to be 100% perfect matches to the colors used in 
 
 7. Add a opening/closing animation to the modals.
    - The modal should only be removed from the DOM after the animation finishes to ensure it has a nice smooth transition out.
-   <!-- **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!****** -->
 
 ## Rubric
 

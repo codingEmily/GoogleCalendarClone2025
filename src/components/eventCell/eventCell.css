@@ -19,6 +19,7 @@
   border: none;
 }
 
+/*The below CSS is for the choice to gray out prev-days by creating an overlay for the whole date */
 /* .calendar-event.prev-day-overlay::after {
   content: "";
   position: absolute;

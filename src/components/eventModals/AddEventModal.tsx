@@ -9,13 +9,13 @@ import {
   to12HourFormat,
 } from "../../contexts/CalendarContext"
 import "./eventModals.css"
-import closeBtnImg from "../../app/symmetrical_x_btn.png"
+import closeBtnImg from "../../img/symmetrical_x_btn.png"
 
 export function AddEventModal() {
   const {
     ui: {
-      showEventModal,
-      setShowEventModal,
+      showAddEventModal,
+      setShowAddEventModal,
       selectedEventDate,
       modalAnimatingOut,
       setModalAnimatingOut,
@@ -25,39 +25,40 @@ export function AddEventModal() {
 
   const [eventData, setEventData] = useState<EventFormState>(GLOBAL_EVENT_STATE_DEFAULT)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
+    const newValue = type === "checkbox" ? checked : value
+
     setEventData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }))
 
     if (name === "endTime") {
       e.target.setCustomValidity("")
     }
-  }
+  }, [])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedEventDate) return
 
-    const form = e.currentTarget
-    const startInputEl = form.querySelector<HTMLInputElement>('input[name="startTime"]')
-    const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
-    endInputEl?.setCustomValidity("")
+    if (!eventData.allDay) {
+      const form = e.currentTarget
+      const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
+      if (endInputEl) {
+        endInputEl.setCustomValidity("")
 
-    if (!eventData.allDay && startInputEl && endInputEl) {
-      const startValue = startInputEl.value
-      const endValue = endInputEl.value
-
-      if (startValue && endValue && endValue < startValue) {
-        endInputEl?.setCustomValidity(
-          `Value must be ${to12HourFormat(eventData.startTime)} or later.`
-        )
-        endInputEl?.reportValidity()
-        return
+        if (eventData.endTime < eventData.startTime) {
+          endInputEl.setCustomValidity(
+            `Value must be ${to12HourFormat(eventData.startTime)} or later.`
+          )
+          endInputEl.reportValidity()
+          return
+        }
       }
     }
+
     addEvent(selectedEventDate, {
       eventName: eventData.eventName,
       eventAllDay: eventData.allDay,
@@ -76,18 +77,20 @@ export function AddEventModal() {
 
   const handleAnimationEnd = useCallback(() => {
     if (modalAnimatingOut) {
-      setShowEventModal(false)
+      setShowAddEventModal(false)
       setModalAnimatingOut(false)
     }
-  }, [modalAnimatingOut, setModalAnimatingOut, setShowEventModal])
+  }, [modalAnimatingOut, setModalAnimatingOut, setShowAddEventModal])
 
-  if (!showEventModal && !modalAnimatingOut) return null
+  if (!showAddEventModal && !modalAnimatingOut) return null
 
   return (
     <>
-      <div className={`overlay ${showEventModal ? "show" : ""}`} />
+      <div className={`overlay ${showAddEventModal ? "show" : ""}`} />
       <div
-        className={`event-modal ${showEventModal ? "show" : ""} ${modalAnimatingOut ? "hide" : ""}`}
+        className={`event-modal ${showAddEventModal ? "show" : ""} ${
+          modalAnimatingOut ? "hide" : ""
+        }`}
         onAnimationEnd={handleAnimationEnd}>
         <div className='event-modal-header'>
           <span className='event-modal-header-name'>Add Event</span>
@@ -97,7 +100,7 @@ export function AddEventModal() {
           <button
             className='event-modal-header-close-btn'
             onClick={() => setModalAnimatingOut(true)}>
-            <img className='close-btn-img' alt='close btn' src={closeBtnImg}></img>
+            <img className='close-btn-img' alt='close button' src={closeBtnImg}></img>
           </button>
         </div>
 

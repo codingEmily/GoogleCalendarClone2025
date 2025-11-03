@@ -14,7 +14,7 @@ export function DateCell({ date, index }: DateCellProps) {
   const {
     ui: {
       visibleMonth,
-      setShowEventModal,
+      setShowAddEventModal,
       setShowOverflowModal,
       showOverflowModal,
       setSelectedEventDate,
@@ -43,27 +43,13 @@ export function DateCell({ date, index }: DateCellProps) {
 
   const openEventModalForDate = () => {
     setSelectedEventDate(date)
-    setShowEventModal(true)
+    setShowAddEventModal(true)
     setModalAnimatingOut(false)
   }
-
-  useEffect(() => {
-    /// and I stopped here ->
-    /* UP NEXT:
-    1. I want to use the single state for any modal, 
-    to check if it's animating out, and if so, add the 
-    "animatingOut" or simple "hide" class
-    
-    2. So far, I created the modalAnimatingOut, setModalAnimatingOut usestates
-    3. I would put them into effect by adding ANOTHER dynamic class to each modal, that checks if this animating thing is true
-    4. The weird thing about that is, it shows all modals or none at all, but that doesn't seem to matter*/
-  }, [modalAnimatingOut])
 
   const openOverflowModal = () => {
     setSelectedEventDate(date)
     setShowOverflowModal(true)
-    console.log("DATE CELL - see x more btn clicked")
-    console.log("DATE CELL - showOverflowModal: ", showOverflowModal)
   }
 
   const eventsListRef = useRef<HTMLDivElement | null>(null)

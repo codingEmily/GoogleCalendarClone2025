@@ -1,14 +1,13 @@
 :root {
-  --default-text: #333; /*For today-btn, nav arrows, month header, and primary dates, I think */
-  --weekday-text: #777; /*Week-day-name and all-prev-days-numbers, are the same I think */
-  --out-of-month-day-background: #f5f5f5; /* shaded background, made it up bec they pasted the same code as button-background, and that cannot be right */
-  --button-background: #dadce0; /* may also be each-dates-borders, bec they are potentially buttons, and similar color */
-  --todays-date-txt-backgrnd: hsl(200, 80%, 50%);
+  --default-text: #333; /*Used for today-btn, nav arrows, month header, and primary dates*/
+  --weekday-text: #777; /*Week-day-name and all-prev-days-numbers */
+  --out-of-month-day-background: #f5f5f5; /* shaded background, made it up bec they pasted the same code as button-background, but reference img shows different values for date-borders and out-of-month backgrounds */
+  --button-background: #dadce0; /* also each-dates-borders*/
+  --todays-date-txt-background: hsl(200, 80%, 50%);
 
   --red-event: hsl(0, 75%, 60%);
   --blue-event: hsl(200, 80%, 50%);
   --green-event: hsl(150, 80%, 30%);
-  /* --event-btn-color: var(var(--red-event)) */
 
   --Save-Add-Button-Border: hsl(150, 80%, 30%);
   --Save-Add-Button-Background: hsl(150, 80%, 95%);

@@ -9,7 +9,7 @@ import {
 } from "../../contexts/CalendarContext"
 
 import "./eventModals.css"
-import closeBtnImg from "../../app/symmetrical_x_btn.png"
+import closeBtnImg from "../../img/symmetrical_x_btn.png"
 
 export function EditEventModal() {
   const {
@@ -42,37 +42,38 @@ export function EditEventModal() {
     }
   }, [showEditEventModal, selectedEventDate, selectedEventIndex, getEventsForDate])
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
+    const newValue = type === "checkbox" ? checked : value
+
     setEventData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }))
 
     if (name === "endTime") {
       e.target.setCustomValidity("")
     }
-  }
+  }, [])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedEventDate || selectedEventIndex == null) return
 
-    const form = e.currentTarget
-    const startInputEl = form.querySelector<HTMLInputElement>('input[name="startTime"]')
-    const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
-    endInputEl?.setCustomValidity("")
+    if (!eventData.allDay) {
+      const form = e.currentTarget
+      const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
 
-    if (!eventData.allDay && startInputEl && endInputEl) {
-      const startValue = startInputEl.value
-      const endValue = endInputEl.value
+      if (endInputEl) {
+        endInputEl.setCustomValidity("")
 
-      if (startValue && endValue && endValue < startValue) {
-        endInputEl?.setCustomValidity(
-          `Value must be ${to12HourFormat(eventData.startTime)} or later.`
-        )
-        endInputEl?.reportValidity()
-        return
+        if (eventData.endTime < eventData.startTime) {
+          endInputEl.setCustomValidity(
+            `Value must be ${to12HourFormat(eventData.startTime)} or later.`
+          )
+          endInputEl.reportValidity()
+          return
+        }
       }
     }
 
@@ -87,6 +88,7 @@ export function EditEventModal() {
           },
       eventColor: eventData.color,
     })
+
     setShowEditEventModal(false)
   }
 
@@ -121,7 +123,7 @@ export function EditEventModal() {
           <button
             className='event-modal-header-close-btn'
             onClick={() => setModalAnimatingOut(true)}>
-            <img src={closeBtnImg} className='close-btn-img' alt='close btn'></img>
+            <img src={closeBtnImg} className='close-btn-img' alt='close button'></img>
           </button>
         </div>
 

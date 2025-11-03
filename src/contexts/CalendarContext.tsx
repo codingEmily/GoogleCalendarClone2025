@@ -56,16 +56,14 @@ interface CalendarContextValue {
     visibleMonth: Date
     setVisibleMonth: React.Dispatch<React.SetStateAction<Date>>
     visibleDates: Date[]
-    showEventModal: boolean
-    setShowEventModal: React.Dispatch<React.SetStateAction<boolean>>
+    showAddEventModal: boolean
+    setShowAddEventModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventDate?: Date | undefined
     setSelectedEventDate: React.Dispatch<React.SetStateAction<Date | undefined>>
     showEditEventModal: boolean
-    // NEW
+    setShowEditEventModal: React.Dispatch<React.SetStateAction<boolean>>
     modalAnimatingOut: boolean
     setModalAnimatingOut: React.Dispatch<React.SetStateAction<boolean>>
-    // NEW
-    setShowEditEventModal: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventIndex: number | null
     setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
     showOverflowModal: boolean
@@ -116,7 +114,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   }
 
   const [visibleMonth, setVisibleMonth] = useState<Date>(new Date())
-  const [showEventModal, setShowEventModal] = useState<boolean>(false)
+  const [showAddEventModal, setShowAddEventModal] = useState<boolean>(false)
   const [showEditEventModal, setShowEditEventModal] = useState<boolean>(false)
   const [modalAnimatingOut, setModalAnimatingOut] = useState<boolean>(false)
   const [showOverflowModal, setShowOverflowModal] = useState<boolean>(false)
@@ -147,8 +145,8 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         visibleMonth,
         setVisibleMonth,
         visibleDates,
-        showEventModal,
-        setShowEventModal,
+        showAddEventModal,
+        setShowAddEventModal,
         showOverflowModal,
         setShowOverflowModal,
         selectedEventDate,
@@ -167,7 +165,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
       events,
       visibleMonth,
       visibleDates,
-      showEventModal,
+      showAddEventModal,
       selectedEventDate,
       showEditEventModal,
       selectedEventIndex,
