@@ -1,11 +1,15 @@
 import { useEffect, useState, useCallback, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
-import type { CalendarEvent, EventFormState } from "../../contexts/CalendarContext"
+import type {
+  CalendarEventForm,
+  CalendarEventWithId,
+  // EventFormState
+} from "../../contexts/CalendarContext"
 import {
   useCalendar,
   to12HourFormat,
   GLOBAL_EVENT_KEY_DATE_FORMAT,
-  GLOBAL_EVENT_STATE_DEFAULT,
+  // GLOBAL_EVENT_STATE_DEFAULT,
 } from "../../contexts/CalendarContext"
 
 import "./eventModals.css"
@@ -18,25 +22,31 @@ export function EditEventModal() {
       setShowEditEventModal,
       selectedEventDate,
       selectedEventIndex,
+      selectedEventId,
       modalAnimatingOut,
       setModalAnimatingOut,
     },
     eventsAPI: { getEventsForDate, deleteEvent, updateEvent },
   } = useCalendar()
 
-  const [eventData, setEventData] = useState<EventFormState>(GLOBAL_EVENT_STATE_DEFAULT)
+  const [eventData, setEventData] = useState<CalendarEventWithId | null>()
+  /* replacing by creating a selectedEventId state and using that to fetch specific event data*/
 
   useEffect(() => {
     if (showEditEventModal && selectedEventDate != null && selectedEventIndex != null) {
       const events = getEventsForDate(selectedEventDate)
-      const event = events[selectedEventIndex]
-      if (event) {
+      // const eventOg = events[selectedEventIndex] /*fetch by id, not by index */
+      const event = events.find((e) => e.eventId === selectedEventId)
+      if (event !== null) {
         setEventData({
-          eventName: event.eventName,
-          allDay: event.eventAllDay,
-          startTime: event.eventTimes?.start || "",
-          endTime: event.eventTimes?.end || "",
-          color: event.eventColor as "red" | "green" | "blue",
+          eventId: selectedEventId,
+          eventForm: {
+            eventName: event?.eventForm.eventName || "",
+            eventAllDay: event?.eventForm.eventAllDay || false,
+            eventStartTime: event?.eventForm.eventStartTime || null,
+            eventEndTime: event?.eventForm.eventEndTime || null,
+            eventColor: event?.eventForm.eventColor || "red",
+          },
         })
       }
     }

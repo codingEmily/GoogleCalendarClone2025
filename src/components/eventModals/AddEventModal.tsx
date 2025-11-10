@@ -1,11 +1,10 @@
 import { useState, useCallback, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
 import {
-  type CalendarEvent,
-  type EventFormState,
+  type CalendarEventForm,
+  type CalendarEventWithId,
   useCalendar,
   GLOBAL_EVENT_KEY_DATE_FORMAT,
-  GLOBAL_EVENT_STATE_DEFAULT,
   to12HourFormat,
 } from "../../contexts/CalendarContext"
 import "./eventModals.css"
@@ -23,18 +22,56 @@ export function AddEventModal() {
     eventsAPI: { addEvent },
   } = useCalendar()
 
-  const [eventData, setEventData] = useState<EventFormState>(GLOBAL_EVENT_STATE_DEFAULT)
+  function generateId() {
+    return crypto.randomUUID()
+  }
+  const Event_State_Default: CalendarEventForm = {
+    eventName: "",
+    eventAllDay: true,
+    eventStartTime: "",
+    eventEndTime: "",
+    eventColor: "red",
+  }
+  const [eventData, setEventData] = useState<CalendarEventForm>(Event_State_Default)
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
-    const newValue = type === "checkbox" ? checked : value
+    const { name, value, checked } = e.target
 
-    setEventData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }))
+    setEventData((prev) => {
+      // Handle checkbox
+      if (name === "eventAllDay") {
+        return {
+          ...prev,
+          eventAllDay: checked,
+        }
+      }
 
-    if (name === "endTime") {
+      // Handle time inputs
+      if (name === "eventStartTime" || name === "eventEndTime") {
+        return {
+          ...prev,
+          eventStartTime: prev.eventStartTime || "",
+          eventEndTime: prev.eventEndTime || "",
+        }
+      }
+
+      // Handle color radio buttons
+      if (name === "eventColor") {
+        return {
+          ...prev,
+          eventColor: value as "red" | "green" | "blue",
+        }
+      }
+
+      // Handle text input (eventName)
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+
+    // Clear custom validity when end time changes
+    if (name === "eventEndTime") {
       e.target.setCustomValidity("")
     }
   }, [])
@@ -43,15 +80,23 @@ export function AddEventModal() {
     e.preventDefault()
     if (!selectedEventDate) return
 
-    if (!eventData.allDay) {
+    // Validate end time is after start time (for non-all-day events)
+    if (!eventData.eventAllDay) {
       const form = e.currentTarget
       const endInputEl = form.querySelector<HTMLInputElement>('input[name="endTime"]')
-      if (endInputEl) {
+
+      if (endInputEl && (eventData.eventStartTime || eventData.eventEndTime)) {
         endInputEl.setCustomValidity("")
 
-        if (eventData.endTime < eventData.startTime) {
+        if (
+          eventData.eventStartTime &&
+          eventData.eventEndTime &&
+          eventData.eventEndTime < eventData.eventStartTime
+        ) {
           endInputEl.setCustomValidity(
-            `Value must be ${to12HourFormat(eventData.startTime)} or later.`
+            `Value must be ${to12HourFormat(
+              eventData.eventEndTime || "equal to start-time"
+            )} or later.`
           )
           endInputEl.reportValidity()
           return
@@ -60,19 +105,17 @@ export function AddEventModal() {
     }
 
     addEvent(selectedEventDate, {
-      eventName: eventData.eventName,
-      eventAllDay: eventData.allDay,
-      eventTimes: eventData.allDay
-        ? null
-        : {
-            start: eventData.startTime,
-            end: eventData.endTime,
-          },
-      eventColor: eventData.color,
+      eventId: generateId(),
+      eventForm: {
+        eventName: eventData.eventName,
+        eventAllDay: eventData.eventAllDay,
+        eventStartTime: eventData.eventAllDay ? null : eventData.eventStartTime,
+        eventEndTime: eventData.eventAllDay ? null : eventData.eventEndTime,
+        eventColor: eventData.eventColor,
+      },
     })
-
     setModalAnimatingOut(true)
-    setEventData(GLOBAL_EVENT_STATE_DEFAULT)
+    setEventData(Event_State_Default)
   }
 
   const handleAnimationEnd = useCallback(() => {
@@ -100,7 +143,7 @@ export function AddEventModal() {
           <button
             className='event-modal-header-close-btn'
             onClick={() => setModalAnimatingOut(true)}>
-            <img className='close-btn-img' alt='close button' src={closeBtnImg}></img>
+            <img className='close-btn-img' alt='close button' src={closeBtnImg} />
           </button>
         </div>
 
@@ -123,8 +166,8 @@ export function AddEventModal() {
             <label className='allday modal-form-label'>
               <input
                 type='checkbox'
-                name='allDay'
-                checked={eventData.allDay}
+                name='eventAllDay'
+                checked={eventData.eventAllDay}
                 onChange={handleChange}
               />
               All Day?
@@ -133,26 +176,28 @@ export function AddEventModal() {
 
           <div className='event-label event-times'>
             <label className='event-time modal-form-label'>
-              <span>Start Time</span>
+              Start Time
+              <br />
               <input
                 type='time'
                 name='startTime'
-                value={eventData.startTime}
+                value={eventData.eventStartTime || ""}
                 onChange={handleChange}
-                disabled={eventData.allDay}
-                required={!eventData.allDay}
+                disabled={eventData.eventAllDay}
+                required={!eventData.eventAllDay}
               />
             </label>
 
             <label className='event-time modal-form-label'>
               End Time
+              <br />
               <input
                 type='time'
                 name='endTime'
-                value={eventData.endTime}
+                value={eventData.eventEndTime || ""}
                 onChange={handleChange}
-                disabled={eventData.allDay}
-                required={!eventData.allDay}
+                disabled={eventData.eventAllDay}
+                required={!eventData.eventAllDay}
               />
             </label>
           </div>
@@ -163,15 +208,16 @@ export function AddEventModal() {
               <br />
               <div className='radio-group'>
                 {["red", "green", "blue"].map((c) => (
-                  <input
-                    key={c}
-                    type='radio'
-                    id={c}
-                    name='color'
-                    value={c}
-                    checked={eventData.color === c}
-                    onChange={handleChange}
-                  />
+                  <label key={c}>
+                    <input
+                      type='radio'
+                      name='eventColor'
+                      value={c}
+                      checked={eventData.eventColor === c}
+                      onChange={handleChange}
+                    />
+                    {c}
+                  </label>
                 ))}
               </div>
             </label>

@@ -19,38 +19,27 @@ export function to12HourFormat(time: string): string {
   const date = parse(time, "HH:mm", new Date())
   return format(date, GLOBAL_EVENT_TIMES_FORMAT)
 }
-
-export interface CalendarEvent {
+export interface CalendarEventForm {
   eventName: string
   eventAllDay: boolean
-  eventTimes: { start: string; end: string } | null
+  eventStartTime: "" | null
+  eventEndTime: "" | null
   eventColor: "red" | "green" | "blue"
 }
-export type EventsMap = Record<string, CalendarEvent[]>
 
-export interface EventFormState {
-  eventName: string
-  allDay: boolean
-  startTime: string
-  endTime: string
-  color: "red" | "green" | "blue"
+export interface CalendarEventWithId {
+  eventId: string
+  eventForm: CalendarEventForm
 }
-
-export const GLOBAL_EVENT_STATE_DEFAULT: EventFormState = {
-  eventName: "",
-  allDay: true,
-  startTime: "",
-  endTime: "",
-  color: "red",
-}
+export type EventsMap = Record<string, CalendarEventWithId[]>
 
 interface CalendarContextValue {
   eventsAPI: {
     events: EventsMap
-    getEventsForDate: (date: Date) => CalendarEvent[]
-    addEvent: (date: Date, newEvent: CalendarEvent) => void
+    getEventsForDate: (date: Date) => CalendarEventWithId[]
+    addEvent: (date: Date, newEvent: CalendarEventWithId) => void
     deleteEvent: (date: Date, index: number) => void
-    updateEvent: (date: Date, index: number, updatedEvent: CalendarEvent) => void
+    updateEvent: (date: Date, index: number, updatedEvent: CalendarEventWithId) => void
   }
   ui: {
     visibleMonth: Date
@@ -66,6 +55,8 @@ interface CalendarContextValue {
     setModalAnimatingOut: React.Dispatch<React.SetStateAction<boolean>>
     selectedEventIndex: number | null
     setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
+    selectedEventId: string
+    setSelectedEventId: React.Dispatch<React.SetStateAction<string>>
     showOverflowModal: boolean
     setShowOverflowModal: React.Dispatch<React.SetStateAction<boolean>>
     showPreviousMonth: () => void
@@ -77,17 +68,16 @@ const CalendarContext = createContext<CalendarContextValue | undefined>(undefine
 
 interface CalendarProviderProps {
   children: ReactNode
-}
-
+} /*WHY is an interface needed for something so simple??? */
 export function CalendarProvider({ children }: CalendarProviderProps) {
   const [events, setEvents] = useLocalStorage<EventsMap>("eventsStoredData", {})
 
-  function getEventsForDate(date: Date): CalendarEvent[] {
+  function getEventsForDate(date: Date): CalendarEventWithId[] {
     const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     return events[key] || []
   }
 
-  function addEvent(date: Date, newEvent: CalendarEvent): void {
+  function addEvent(date: Date, newEvent: CalendarEventWithId): void {
     const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
       const prevEventsForSelectedDate = prev[key] || []
@@ -103,7 +93,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     })
   }
 
-  function updateEvent(date: Date, index: number, updatedEvent: CalendarEvent): void {
+  function updateEvent(date: Date, index: number, updatedEvent: CalendarEventWithId): void {
     const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
       const prevEventsForSelectedDate = prev[key] || []
@@ -120,6 +110,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   const [showOverflowModal, setShowOverflowModal] = useState<boolean>(false)
   const [selectedEventDate, setSelectedEventDate] = useState<Date>()
   const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null)
+  const [selectedEventId, setSelectedEventId] = useState<string>("")
 
   const visibleDates = useMemo<Date[]>(
     () =>
@@ -157,6 +148,8 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         setModalAnimatingOut,
         selectedEventIndex,
         setSelectedEventIndex,
+        selectedEventId,
+        setSelectedEventId,
         showPreviousMonth,
         showNextMonth,
       },

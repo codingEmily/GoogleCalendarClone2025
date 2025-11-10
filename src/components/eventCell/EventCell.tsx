@@ -5,11 +5,11 @@ import {
   to12HourFormat,
   useCalendar,
 } from "../../contexts/CalendarContext"
-import type { CalendarEvent } from "../../contexts/CalendarContext"
+import type { CalendarEventWithId } from "../../contexts/CalendarContext"
 import "./eventCell.css"
 
 interface EventCellProps {
-  event: CalendarEvent
+  event: CalendarEventWithId
   index: number
   date: Date
 }
@@ -20,6 +20,7 @@ export default function EventCell({ event, index, date }: EventCellProps) {
       setShowEditEventModal,
       setSelectedEventDate,
       setSelectedEventIndex,
+      setSelectedEventId,
       setShowOverflowModal,
     },
   } = useCalendar()
@@ -28,6 +29,7 @@ export default function EventCell({ event, index, date }: EventCellProps) {
     e.stopPropagation()
     setSelectedEventDate(date)
     setSelectedEventIndex(index)
+    setSelectedEventId(event.eventId)
     setShowEditEventModal(true)
     setShowOverflowModal(false)
   }
@@ -35,21 +37,22 @@ export default function EventCell({ event, index, date }: EventCellProps) {
   return (
     <>
       <button
-        className={`calendar-event  ${event.eventAllDay ? "allday-event" : "timed-event"} ${
-          event.eventColor
-        }-event 
+        className={`calendar-event  ${
+          event.eventForm.eventAllDay ? "allday-event" : "timed-event"
+        } ${event.eventForm.eventColor}-event 
         ${isPast(date) && !isToday(date) ? "prev-day-overlay" : ""} `}
         onClick={handleClick}
-        title={event.eventName}>
-        {event.eventAllDay ? (
-          <span className='event-name'>{event.eventName}</span>
+        title={event.eventForm.eventName}>
+        {event.eventForm.eventAllDay ? (
+          <span className='event-name'>{event.eventForm.eventName}</span>
         ) : (
           <>
             <span className='event-dot'>●</span>
             <span className='event-time'>
-              {event.eventTimes?.start != null && `${to12HourFormat(event.eventTimes.start)}`}
+              {event.eventForm.eventStartTime != null &&
+                `${to12HourFormat(event.eventForm.eventStartTime)}`}
             </span>
-            <span className='event-name'>{event.eventName}</span>
+            <span className='event-name'>{event.eventForm.eventName}</span>
           </>
         )}
       </button>

@@ -26,7 +26,7 @@ export function Nav() {
   } = useCalendar()
 
   return (
-    <div className='calendar-nav'>
+    <nav className='calendar-nav'>
       <button onClick={() => setVisibleMonth(new Date())}>Today</button>
 
       <button className='nav-arrow-button' onClick={showPreviousMonth}>
@@ -37,7 +37,7 @@ export function Nav() {
       </button>
 
       <span className='nav-month-header'>{format(visibleMonth, "MMMM yyyy")}</span>
-    </div>
+    </nav>
   )
 }
 
@@ -48,11 +48,11 @@ export function MonthlyGrid() {
 
   return (
     <>
-      <div className='month-container'>
+      <main className='month-container' tabIndex={0}>
         {visibleDates.map((date: Date, index: number) => (
-          <DateCell key={date.toDateString()} date={date} index={index} />
+          <DateCell key={date.toDateString()} date={date} index={index}  />
         ))}
-      </div>
+      </main>
     </>
   )
 }
