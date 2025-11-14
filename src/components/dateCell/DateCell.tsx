@@ -28,7 +28,6 @@ export function DateCell({ date, index }: DateCellProps) {
 
   const events: CalendarEventWithId[] = getEventsForDate(date) || []
   const sortedEvents = useMemo(() => {
-    // if (!events || events.length === 0) return
     return [...events].sort((a, b) => {
       if (a.eventForm.eventAllDay && !b.eventForm.eventAllDay) return -1
       if (!a.eventForm.eventAllDay && b.eventForm.eventAllDay) return 1

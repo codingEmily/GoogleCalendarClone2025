@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react"
 import { format } from "date-fns"
-import type { CalendarEvent } from "../../contexts/CalendarContext"
+import type { CalendarEventWithId } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
 import { GLOBAL_EVENT_KEY_DATE_FORMAT } from "../../contexts/CalendarContext"
 import EventCell from "../eventCell/EventCell"
@@ -21,16 +21,16 @@ export function OverflowModal() {
     eventsAPI: { getEventsForDate },
   } = useCalendar()
 
-  const events: CalendarEvent[] =
+  const events: CalendarEventWithId[] =
     selectedEventDate != null ? getEventsForDate(selectedEventDate) : []
   const sortedEvents = useMemo(() => {
     return [...events].sort((a, b) => {
-      if (a.eventAllDay && !b.eventAllDay) return -1
-      if (!a.eventAllDay && b.eventAllDay) return 1
-      if (a.eventAllDay && b.eventAllDay) return 0
+      if (a.eventForm.eventAllDay && !b.eventForm.eventAllDay) return -1
+      if (!a.eventForm.eventAllDay && b.eventForm.eventAllDay) return 1
+      if (a.eventForm.eventAllDay && b.eventForm.eventAllDay) return 0
 
-      const aStart = a.eventTimes?.start ?? ""
-      const bStart = b.eventTimes?.start ?? ""
+      const aStart = a.eventForm.eventStartTime ?? ""
+      const bStart = b.eventForm.eventStartTime ?? ""
       return aStart.localeCompare(bStart)
     })
   }, [events])
