@@ -27,10 +27,8 @@ export function DateCell({ date, index }: DateCellProps) {
   const weekdayLabels = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
   const events: CalendarEventWithId[] = getEventsForDate(date) || []
-  /// probably getting eventsWithId, but check logic to be sure
-
-  // Sort events: all-day first, then by start time
   const sortedEvents = useMemo(() => {
+    // if (!events || events.length === 0) return
     return [...events].sort((a, b) => {
       if (a.eventForm.eventAllDay && !b.eventForm.eventAllDay) return -1
       if (!a.eventForm.eventAllDay && b.eventForm.eventAllDay) return 1
@@ -44,26 +42,8 @@ export function DateCell({ date, index }: DateCellProps) {
 
   const eventsListRef = useRef<HTMLDivElement | null>(null)
   const [visibleCount, setVisibleCount] = useState(sortedEvents.length)
-
-  // Calculate how many events are hidden
   const hiddenCount = Math.max(0, sortedEvents.length - visibleCount)
 
-  const openEventModalForDate = () => {
-    setSelectedEventDate(date)
-    setShowAddEventModal(true)
-    setModalAnimatingOut(false)
-  }
-
-  const openOverflowModal = () => {
-    setSelectedEventDate(date)
-    setShowOverflowModal(true)
-  }
-
-  /**
-   * Calculate which events are fully visible in the container.
-   * An event is considered visible only if it's FULLY within the visible area.
-   * Partially visible events are treated as hidden for better UX.
-   */
   const calculateVisibleEvents = () => {
     const container = eventsListRef.current
     if (!container) return sortedEvents.length
@@ -71,13 +51,11 @@ export function DateCell({ date, index }: DateCellProps) {
     const children = Array.from(container.children) as HTMLElement[]
     if (children.length === 0) return 0
 
-    // Get the actual visible height of the container
     const containerRect = container.getBoundingClientRect()
     const containerTop = containerRect.top
     const containerBottom = containerRect.bottom
     const availableHeight = containerRect.height
 
-    // If container has no height, nothing is visible
     if (availableHeight <= 0) return 0
 
     let visibleCount = 0
@@ -99,13 +77,10 @@ export function DateCell({ date, index }: DateCellProps) {
         break
       }
     }
-
     return visibleCount
   }
 
-  /**
-   * Update the visible count, debounced with RAF for performance
-   */
+  // Update the visible count, debounced with RAF for performance
   const updateVisibleCount = useRef<number | null>(null)
 
   const scheduleVisibilityCheck = () => {
@@ -150,6 +125,18 @@ export function DateCell({ date, index }: DateCellProps) {
       }
     }
   }, [sortedEvents.length]) // Re-run when number of events changes
+
+  const openEventModalForDate = () => {
+    setSelectedEventDate(date)
+    setShowAddEventModal(true)
+    setModalAnimatingOut(false)
+  }
+
+  const openOverflowModal = () => {
+    setSelectedEventDate(date)
+    setShowOverflowModal(true)
+    setModalAnimatingOut(false)
+  }
 
   return (
     <div

@@ -1,6 +1,5 @@
 import { format } from "date-fns"
 import { CalendarProvider, useCalendar } from "../contexts/CalendarContext"
-
 import { DateCell } from "../components/dateCell/DateCell"
 import { AddEventModal } from "../components/eventModals/AddEventModal"
 import { EditEventModal } from "../components/eventModals/EditEventModal"
@@ -50,7 +49,7 @@ export function MonthlyGrid() {
     <>
       <main className='month-container' tabIndex={0}>
         {visibleDates.map((date: Date, index: number) => (
-          <DateCell key={date.toDateString()} date={date} index={index}  />
+          <DateCell key={date.toDateString()} date={date} index={index} />
         ))}
       </main>
     </>

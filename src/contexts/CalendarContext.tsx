@@ -22,8 +22,8 @@ export function to12HourFormat(time: string): string {
 export interface CalendarEventForm {
   eventName: string
   eventAllDay: boolean
-  eventStartTime: "" | null
-  eventEndTime: "" | null
+  eventStartTime: ""
+  eventEndTime: ""
   eventColor: "red" | "green" | "blue"
 }
 
@@ -31,6 +31,15 @@ export interface CalendarEventWithId {
   eventId: string
   eventForm: CalendarEventForm
 }
+
+export const Event_Form_Default: CalendarEventForm = {
+  eventName: "",
+  eventAllDay: true,
+  eventStartTime: "",
+  eventEndTime: "",
+  eventColor: "red",
+}
+
 export type EventsMap = Record<string, CalendarEventWithId[]>
 
 interface CalendarContextValue {
