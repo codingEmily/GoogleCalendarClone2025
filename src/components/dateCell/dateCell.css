@@ -70,8 +70,8 @@
 }
 
 .add-event-btn {
-  opacity: 0; /*NEW FOR ACCESSIBILITY, replaced display: block */
-  pointer-events: none; /*NEW FOR ACCESSIBILITY, replaced display: block  */
+  opacity: 0; 
+  pointer-events: none; 
   font-family: var(--date-font);
   font-weight: 100;
   font-size: calc(var(--date-font-size) * 1.25);

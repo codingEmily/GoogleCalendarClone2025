@@ -1,10 +1,6 @@
 import type { MouseEvent } from "react"
-import { format, parse, isPast, isToday } from "date-fns"
-import {
-  GLOBAL_EVENT_TIMES_FORMAT,
-  to12HourFormat,
-  useCalendar,
-} from "../../contexts/CalendarContext"
+import { isPast, isToday } from "date-fns"
+import { to12HourFormat, useCalendar } from "../../contexts/CalendarContext"
 import type { CalendarEventWithId } from "../../contexts/CalendarContext"
 import "./eventCell.css"
 
@@ -16,19 +12,12 @@ interface EventCellProps {
 
 export default function EventCell({ event, index, date }: EventCellProps) {
   const {
-    ui: {
-      setShowEditEventModal,
-      setSelectedEventDate,
-      setSelectedEventIndex,
-      setSelectedEventId,
-      setShowOverflowModal,
-    },
+    ui: { setShowEditEventModal, setSelectedEventDate, setSelectedEventId, setShowOverflowModal },
   } = useCalendar()
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setSelectedEventDate(date)
-    setSelectedEventIndex(index)
     setSelectedEventId(event.eventId)
     setShowEditEventModal(true)
     setShowOverflowModal(false)

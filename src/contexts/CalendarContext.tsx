@@ -47,8 +47,8 @@ interface CalendarContextValue {
     events: EventsMap
     getEventsForDate: (date: Date) => CalendarEventWithId[]
     addEvent: (date: Date, newEvent: CalendarEventWithId) => void
-    deleteEvent: (date: Date, index: number) => void
-    updateEvent: (date: Date, index: number, updatedEvent: CalendarEventWithId) => void
+    deleteEvent: (date: Date, id: string) => void
+    updateEvent: (date: Date, updatedEvent: CalendarEventWithId) => void
   }
   ui: {
     visibleMonth: Date
@@ -62,8 +62,6 @@ interface CalendarContextValue {
     setShowEditEventModal: React.Dispatch<React.SetStateAction<boolean>>
     modalAnimatingOut: boolean
     setModalAnimatingOut: React.Dispatch<React.SetStateAction<boolean>>
-    selectedEventIndex: number | null
-    setSelectedEventIndex: React.Dispatch<React.SetStateAction<number | null>>
     selectedEventId: string
     setSelectedEventId: React.Dispatch<React.SetStateAction<string>>
     showOverflowModal: boolean
@@ -77,7 +75,7 @@ const CalendarContext = createContext<CalendarContextValue | undefined>(undefine
 
 interface CalendarProviderProps {
   children: ReactNode
-} /*WHY is an interface needed for something so simple??? */
+}
 export function CalendarProvider({ children }: CalendarProviderProps) {
   const [events, setEvents] = useLocalStorage<EventsMap>("eventsStoredData", {})
 
@@ -94,19 +92,21 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     })
   }
 
-  function deleteEvent(date: Date, index: number): void {
+  function deleteEvent(date: Date, id: string): void {
     const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
       const prevEventsForSelectedDate = prev[key] || []
+      const index = prevEventsForSelectedDate.findIndex((e) => e.eventId === id)
       return { ...prev, [key]: prevEventsForSelectedDate.filter((_, i) => i !== index) }
     })
   }
 
-  function updateEvent(date: Date, index: number, updatedEvent: CalendarEventWithId): void {
+  function updateEvent(date: Date, updatedEvent: CalendarEventWithId): void {
     const key = format(date, GLOBAL_EVENT_KEY_DATE_FORMAT)
     setEvents((prev) => {
       const prevEventsForSelectedDate = prev[key] || []
       const newEvents = [...prevEventsForSelectedDate]
+      const index = newEvents.findIndex((e) => e.eventId === updatedEvent.eventId)
       newEvents[index] = updatedEvent
       return { ...prev, [key]: newEvents }
     })
@@ -118,7 +118,6 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
   const [modalAnimatingOut, setModalAnimatingOut] = useState<boolean>(false)
   const [showOverflowModal, setShowOverflowModal] = useState<boolean>(false)
   const [selectedEventDate, setSelectedEventDate] = useState<Date>()
-  const [selectedEventIndex, setSelectedEventIndex] = useState<number | null>(null)
   const [selectedEventId, setSelectedEventId] = useState<string>("")
 
   const visibleDates = useMemo<Date[]>(
@@ -155,8 +154,6 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
         setShowEditEventModal,
         modalAnimatingOut,
         setModalAnimatingOut,
-        selectedEventIndex,
-        setSelectedEventIndex,
         selectedEventId,
         setSelectedEventId,
         showPreviousMonth,
@@ -170,7 +167,6 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
       showAddEventModal,
       selectedEventDate,
       showEditEventModal,
-      selectedEventIndex,
       showOverflowModal,
       modalAnimatingOut,
     ]

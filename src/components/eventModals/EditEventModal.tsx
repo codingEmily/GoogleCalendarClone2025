@@ -3,7 +3,6 @@ import { format } from "date-fns"
 import type {
   CalendarEventForm,
   CalendarEventWithId,
-  EventsMap,
 } from "../../contexts/CalendarContext"
 import {
   useCalendar,
@@ -20,7 +19,6 @@ export function EditEventModal() {
       showEditEventModal,
       setShowEditEventModal,
       selectedEventDate,
-      selectedEventIndex,
       selectedEventId,
       setSelectedEventId,
       modalAnimatingOut,
@@ -33,19 +31,15 @@ export function EditEventModal() {
     eventId: "",
     eventForm: Event_Form_Default,
   })
-  /*initializing eventData object as CalendarEventWithId interface or null, begins as null */
-
+ 
   useEffect(() => {
-    // useEffect runs when showEditModal, selectedEventDate, selectedEventId, or getEventsForDate changes (last one is function, check if this is ok)
     if (showEditEventModal && selectedEventDate != null && selectedEventId != "") {
-      //condition
-      const events = getEventsForDate(selectedEventDate) //fetch events
-      const event = events.find((e) => e.eventId === selectedEventId) // sort the specific event by id
+      const events = getEventsForDate(selectedEventDate)
+      const event = events.find((e) => e.eventId === selectedEventId) 
       if (event !== null) {
         console.log(event)
         setEventData({
-          // set eventData to all data from the fetched event, but give the default properties as unions
-          eventId: selectedEventId, // sets eventId permanently for this use of EditEventModal (changes obviosly when selectedEventId updates)
+          eventId: selectedEventId,
           eventForm: {
             eventName: event?.eventForm.eventName || "",
             eventAllDay: event?.eventForm.eventAllDay || false,
@@ -60,8 +54,7 @@ export function EditEventModal() {
   }, [showEditEventModal, selectedEventDate, selectedEventId, getEventsForDate])
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    //handleChange is callback, runs once on mount
-    if (!eventData) return // guard condition
+    if (!eventData) return 
     const { name, value, type, checked } = e.target
     const newValue = type === "checkbox" ? checked : value
     setEventData((prev) => ({
@@ -79,8 +72,7 @@ export function EditEventModal() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // if (eventData?.eventForm === null) return
-    if (!selectedEventDate || selectedEventIndex == null || eventData === null) return
+    if (!selectedEventDate || eventData === null) return
 
     if (!eventData.eventForm.eventAllDay) {
       const form = e.currentTarget
@@ -100,7 +92,7 @@ export function EditEventModal() {
       }
     }
 
-    updateEvent(selectedEventDate, selectedEventIndex, {
+    updateEvent(selectedEventDate, {
       eventId: eventData.eventId,
       eventForm: {
         eventName: eventData.eventForm.eventName,
@@ -110,14 +102,14 @@ export function EditEventModal() {
         eventColor: eventData.eventForm.eventColor,
       },
     })
-    setEventData({ eventId: "", eventForm: Event_Form_Default }) // may be good, bad, or useless
+    setEventData({ eventId: "", eventForm: Event_Form_Default }) 
     setSelectedEventId("")
     setShowEditEventModal(false)
   }
 
   const handleDelete = () => {
-    if (!selectedEventDate || selectedEventIndex == null) return
-    deleteEvent(selectedEventDate, selectedEventIndex)
+    if (!selectedEventDate) return
+    deleteEvent(selectedEventDate, eventData.eventId)
     setShowEditEventModal(false)
     setSelectedEventId("")
   }

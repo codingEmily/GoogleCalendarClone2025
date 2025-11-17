@@ -58,28 +58,21 @@ export function DateCell({ date, index }: DateCellProps) {
     if (availableHeight <= 0) return 0
 
     let visibleCount = 0
-
     for (const child of children) {
       const childRect = child.getBoundingClientRect()
       const childTop = childRect.top
       const childBottom = childRect.bottom
-
-      // Event is fully visible if both top and bottom are within container bounds
-      // We add a small tolerance (1px) for floating point precision issues
       const isFullyVisible = childTop >= containerTop - 1 && childBottom <= containerBottom + 1
 
       if (isFullyVisible) {
         visibleCount++
       } else if (childTop < containerBottom) {
-        // Event is partially visible - stop counting here
-        // All subsequent events will also be hidden
         break
       }
     }
     return visibleCount
   }
 
-  // Update the visible count, debounced with RAF for performance
   const updateVisibleCount = useRef<number | null>(null)
 
   const scheduleVisibilityCheck = () => {
@@ -94,18 +87,11 @@ export function DateCell({ date, index }: DateCellProps) {
     })
   }
 
-  /**
-   * Set up observers to detect when recalculation is needed:
-   * - ResizeObserver: when container size changes
-   * - MutationObserver: when events are added/removed
-   */
   useEffect(() => {
     const container = eventsListRef.current
     if (!container) return
 
-    // Initial check after a short delay to ensure layout is complete
     const initialTimeout = setTimeout(scheduleVisibilityCheck, 0)
-
     const resizeObserver = new ResizeObserver(scheduleVisibilityCheck)
     const mutationObserver = new MutationObserver(scheduleVisibilityCheck)
 
@@ -168,7 +154,6 @@ export function DateCell({ date, index }: DateCellProps) {
       {hiddenCount > 0 && (
         <div className='see-more-btn-section show'>
           <button
-            // tabIndex={0}
             className={`see-more-btn ${isPast(date) && !isToday(date) ? "prev-day" : ""}`}
             onClick={openOverflowModal}
             aria-label={`Show ${hiddenCount} more events`}>

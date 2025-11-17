@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react"
+import { useMemo, useCallback } from "react"
 import { format } from "date-fns"
 import type { CalendarEventWithId } from "../../contexts/CalendarContext"
 import { useCalendar } from "../../contexts/CalendarContext"
