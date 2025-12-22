@@ -1,10 +1,11 @@
 # GoogleCalendarClone2025
-This Google Calendar clone is the capstone project for my Software Development, Frontend Specialization course through CourseCareers
-The goal of this project was independently code all the logic necessary for a useable calendar including but not limited to: creating, editing, deleting events. An SDD (software design document) was provided, listing all necessary features and providing images to match in styling.
+
+This Google Calendar clone is the capstone project for my "Software Development: Frontend Specialization" course through CourseCareers.
+The goal of this project was independently code all the logic necessary for a useable calendar including but not limited to: creating, editing, and deleting events. An SDD (software design document) was provided, listing all necessary features and providing images to match in styling.
 This project should function as a legitimate replacement for a personal calendar, as it stores your data in localStorage, and will "remember" your previous data when used on the same device
 
+## **INSTRUCTIONS FOR SETTING UP PROJECT**
 
-## **_ INSTRUCTIONS FOR SETTING UP PROJECT_**
 ### Instruction assume that you already have (a) an account set up with a coding editor, preferably VSC, (b) node.js and git installed, and set up in your editor
 
 First clone this project from my account, if you have not already done so.
@@ -16,18 +17,21 @@ First clone this project from my account, if you have not already done so.
 3.  Copy the github link provided
 
 ### Open VSC, or your editor (if you use another editor/terminal your cmds syntax may differ slightly)
+
 ### In the terminal (powershell) run these commands, in order
 
 0. A. (if you haven't already cloned into the project) run "git clone XYZ" where XYZ is the copied github link
-1. B. Once cloned into project, assure that you are cd'ed into the folder "GoogleCalendarClone2025"
+1. B. Once cloned into project, assure that you are cd'ed into the folder "GoogleCalendarClone2025" \*\*Note, this name may be slightly changed in the future, but should clearly name the project as demonstrated. No other folders will contain project name
 
-2. "npm i"
+2. run "npm i"
 
-3. "npm run dev"
+3. run "npm run dev"
 
 # Something like this should appear in the terminal, press CTRL while clicking the underlined link to open in browser
 
 VITE v7.1.7 ready in 18074 ms
 ➜ Local: http://localhost:5173/
 
-## Dependencies
+## VERCEL DEPLOYED PROJECT
+
+[link to calendar](https://google-calendar-clone2025.vercel.app/)
