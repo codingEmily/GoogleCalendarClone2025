@@ -60,9 +60,7 @@ export function AddEventModal() {
           eventData.eventEndTime < eventData.eventStartTime
         ) {
           endInputEl.setCustomValidity(
-            `Value must be ${to12HourFormat(
-              eventData.eventEndTime || "equal to start-time"
-            )} or later.`
+            `Value must be ${to12HourFormat(eventData.eventStartTime)} or later.`
           )
           endInputEl.reportValidity()
           return
