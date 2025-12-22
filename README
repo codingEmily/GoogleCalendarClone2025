@@ -1,5 +1,6 @@
 # GoogleCalendarClone2025
 
+**PURPOSE AND FUNCTION OF THE PROJECT**
 This Google Calendar clone is the capstone project for my "Software Development: Frontend Specialization" course through CourseCareers.
 
 The goal of this project was independently code all the logic necessary for a useable calendar including but not limited to: creating, editing, and deleting events. An SDD (software design document) was provided, listing all necessary features and providing images to match in styling.
@@ -37,3 +38,25 @@ VITE v7.1.7 ready in 18074 ms
 
 **VERCEL DEPLOYED PROJECT**
 [link to calendar](https://google-calendar-clone2025.vercel.app/)
+
+**LIST OF DEPENDENCIES**
+"dependencies": {
+"react": "^19.1.1",
+"react-dom": "^19.1.1",
+"react-hook-form": "^7.63.0",
+"react-router-dom": "^7.9.3"
+},
+"devDependencies": {
+"@types/node": "^24.7.2",
+"@types/react": "^19.2.2",
+"@types/react-dom": "^19.2.2",
+"typescript": "^5.9.3",
+"@eslint/js": "^9.36.0",
+"@vitejs/plugin-react-swc": "^4.1.0",
+"date-fns": "^4.1.0",
+"eslint": "^9.36.0",
+"eslint-plugin-react-hooks": "^5.2.0",
+"eslint-plugin-react-refresh": "^0.4.20",
+"globals": "^16.4.0",
+"vite": "^7.1.7"
+}
