@@ -172,19 +172,36 @@ export function AddEventModal() {
               Color
               <br />
               <div className='radio-group'>
-                {["red", "green", "blue"].map((c) => (
-                  <label>
-                    <input
-                      key={c}
-                      type='radio'
-                      id={c}
-                      name='eventColor'
-                      value={c}
-                      checked={eventData.eventColor === c}
-                      onChange={handleChange}
-                    />
-                  </label>
-                ))}
+                <label>
+                  <input
+                    type='radio'
+                    id={"red"}
+                    name='eventColor'
+                    value={"red"}
+                    checked={eventData.eventColor === "red"}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label>
+                  <input
+                    type='radio'
+                    id={"green"}
+                    name='eventColor'
+                    value={"green"}
+                    checked={eventData.eventColor === "green"}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label>
+                  <input
+                    type='radio'
+                    id={"blue"}
+                    name='eventColor'
+                    value={"blue"}
+                    checked={eventData.eventColor === "blue"}
+                    onChange={handleChange}
+                  />
+                </label>
               </div>
             </label>
           </div>
