@@ -3,7 +3,7 @@
 **PURPOSE AND FUNCTION OF THE PROJECT**
 This Google Calendar clone is the capstone project for my "Software Development: Frontend Specialization" course through CourseCareers.
 
-The goal of this project was independently code all the logic necessary for a useable calendar including but not limited to: creating, editing, and deleting events. An SDD (software design document) was provided, listing all necessary features and providing images to match in styling.
+The goal of this project was to independently code all the logic necessary for a usable calendar including but not limited to: creating, editing, and deleting events. An SDD (software design document) was provided, listing all necessary features and providing images to match in styling.
 
 This project should function as a legitimate replacement for a personal calendar, as it stores your data in localStorage, and will "remember" your previous data when used on the same device
 
