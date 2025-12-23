@@ -34,7 +34,6 @@ export function EditEventModal() {
       const events = getEventsForDate(selectedEventDate)
       const event = events.find((e) => e.eventId === selectedEventId)
       if (event !== null) {
-        console.log(event)
         setEventData({
           eventId: selectedEventId,
           eventForm: {
