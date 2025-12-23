@@ -1,9 +1,6 @@
 import { useEffect, useState, useCallback, type ChangeEvent, type FormEvent } from "react"
 import { format } from "date-fns"
-import type {
-  CalendarEventForm,
-  CalendarEventWithId,
-} from "../../contexts/CalendarContext"
+import type { CalendarEventForm, CalendarEventWithId } from "../../contexts/CalendarContext"
 import {
   useCalendar,
   to12HourFormat,
@@ -31,11 +28,11 @@ export function EditEventModal() {
     eventId: "",
     eventForm: Event_Form_Default,
   })
- 
+
   useEffect(() => {
     if (showEditEventModal && selectedEventDate != null && selectedEventId != "") {
       const events = getEventsForDate(selectedEventDate)
-      const event = events.find((e) => e.eventId === selectedEventId) 
+      const event = events.find((e) => e.eventId === selectedEventId)
       if (event !== null) {
         console.log(event)
         setEventData({
@@ -50,11 +47,10 @@ export function EditEventModal() {
         })
       }
     }
-    console.log(eventData)
   }, [showEditEventModal, selectedEventDate, selectedEventId, getEventsForDate])
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    if (!eventData) return 
+    if (!eventData) return
     const { name, value, type, checked } = e.target
     const newValue = type === "checkbox" ? checked : value
     setEventData((prev) => ({
@@ -102,7 +98,7 @@ export function EditEventModal() {
         eventColor: eventData.eventForm.eventColor,
       },
     })
-    setEventData({ eventId: "", eventForm: Event_Form_Default }) 
+    setEventData({ eventId: "", eventForm: Event_Form_Default })
     setSelectedEventId("")
     setShowEditEventModal(false)
   }
